@@ -5,72 +5,67 @@
 @tailwind utilities;
 
 :root {
-  /* Vibrant Agricultural Palette - Inspired by Local Difference & Organic Transition */
+  /* Agri-Compliance Palette */
   --font-sans: 'Inter', sans-serif;
   --font-serif: 'Merriweather', serif;
 
-  /* Rich Forest Green - Primary Action */
-  --primary: 152 69% 31%;
+  /* Fresh Green - Primary Action */
+  --primary: 158 66% 31%;       /* Forest Green #1B4332 equivalent */
   --primary-foreground: 0 0% 100%;
 
-  /* Warm Terracotta Orange - Secondary */
-  --secondary: 24 85% 55%;
+  /* Harvest Orange - Secondary */
+  --secondary: 39 100% 72%;      /* Harvest Orange #E85D04 equivalent */
   --secondary-foreground: 0 0% 100%;
 
-  /* Golden Wheat - Accent */
-  --accent: 42 95% 58%;
-  --accent-foreground: 30 60% 15%;
+  /* Sunflower Yellow - Accent */
+  --accent: 50 87% 73%;        /* Sunflower Yellow #FFBA08 equivalent */
+  --accent-foreground: 45 100% 10%;
 
-  /* Earth Brown - Muted/Tertiary */
-  --muted: 35 20% 94%;
-  --muted-foreground: 25 15% 40%;
+  /* Earthy Dark - Foreground/Text */
+  --foreground: 120 40% 10%;    /* Very dark green-gray */
+  --muted: 120 20% 96%;
+  --muted-foreground: 120 10% 45%;
 
-  /* Text Colors */
-  --foreground: 25 30% 15%;
-
-  /* Warm Cream Background */
-  --background: 45 40% 97%;
+  /* Clean Backgrounds */
+  --background: 120 20% 98%;    /* Light Sage #F8FAF8 equivalent */
   --card: 0 0% 100%;
-  --card-foreground: 25 30% 15%;
+  --card-foreground: 120 40% 10%;
 
   /* UI Elements */
-  --border: 35 15% 88%;
-  --input: 35 15% 88%;
-  --ring: 152 69% 36%;
+  --border: 120 10% 90%;
+  --input: 120 10% 90%;
+  --ring: 142 76% 36%;
   --radius: 0.75rem;
 
   /* Status Colors */
-  --destructive: 0 72% 51%;
+  --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
   --warning: 38 92% 50%;
   --success: 142 76% 36%;
 
-  /* Vibrant Chart Palette */
-  --chart-1: 152 69% 31%;
-  --chart-2: 24 85% 55%;
-  --chart-3: 42 95% 58%;
-  --chart-4: 199 89% 48%;
-  --chart-5: 262 83% 58%;
+  /* Chart colors */
+  --chart-1: 142 70% 25%;
+  --chart-2: 25 90% 45%;
+  --chart-3: 45 100% 52%;
+  --chart-4: 120 45% 40%;
+  --chart-5: 35 75% 40%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 25 30% 15%;
+  --popover-foreground: 120 40% 10%;
 }
 
 .dark {
-  --background: 25 15% 10%;
-  --foreground: 35 20% 95%;
-  --card: 25 15% 13%;
-  --card-foreground: 35 20% 95%;
-  --border: 25 15% 22%;
-  --input: 25 15% 22%;
-  --muted: 25 15% 18%;
-  --muted-foreground: 35 15% 60%;
-  --primary: 152 60% 45%;
+  /* Dark mode specific overrides - keeping it professional but dark */
+  --background: 120 10% 10%;
+  --foreground: 120 10% 95%;
+  --card: 120 10% 13%;
+  --card-foreground: 120 10% 95%;
+  --border: 120 10% 20%;
+  --input: 120 10% 20%;
+  --muted: 120 10% 18%;
+  --muted-foreground: 120 10% 60%;
+  --primary: 142 60% 45%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 24 75% 50%;
-  --secondary-foreground: 0 0% 100%;
-  --accent: 42 85% 55%;
-  --accent-foreground: 0 0% 100%;
 }
 
 @layer base {
@@ -81,10 +76,11 @@
     @apply bg-background text-foreground antialiased font-sans;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif font-bold tracking-tight text-foreground;
+    @apply font-serif font-bold tracking-tight text-foreground/90;
   }
 }
 
+/* Custom Utilities */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -92,20 +88,9 @@
   .glass-panel {
     @apply bg-white/80 dark:bg-black/50 backdrop-blur-md border border-white/20 shadow-xl;
   }
-  .gradient-primary {
-    @apply bg-gradient-to-br from-primary via-primary/90 to-emerald-700;
-  }
-  .gradient-secondary {
-    @apply bg-gradient-to-br from-secondary via-orange-500 to-amber-500;
-  }
-  .gradient-accent {
-    @apply bg-gradient-to-br from-accent via-yellow-400 to-amber-400;
-  }
-  .gradient-hero {
-    @apply bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600;
-  }
 }
 
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
