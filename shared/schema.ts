@@ -1,10 +1,26 @@
-import { pgTable, text, serial, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, boolean, timestamp, jsonb, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { sql } from "drizzle-orm";
 import { users } from "./models/auth";
 
 // Export Auth models
 export * from "./models/auth";
+
+// Re-defining chat models directly in shared/schema.ts since replit_integrations/chat/storage.ts expects them here
+export const conversations = pgTable("conversations", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
+
+export const messages = pgTable("messages", {
+  id: serial("id").primaryKey(),
+  conversationId: integer("conversation_id").notNull().references(() => conversations.id, { onDelete: "cascade" }),
+  role: text("role").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
 
 export const fsmaStatus = pgTable("fsma_status", {
   id: serial("id").primaryKey(),
@@ -39,3 +55,6 @@ export type InsertRecord = z.infer<typeof insertRecordSchema>;
 export type CreateRecordRequest = Omit<InsertRecord, 'userId'>;
 export type UpdateRecordRequest = Partial<CreateRecordRequest>;
 export type UpdateFsmaStatusRequest = Omit<InsertFsmaStatus, 'userId'>;
+
+export type Conversation = typeof conversations.$inferSelect;
+export type Message = typeof messages.$inferSelect;
