@@ -2,7 +2,6 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
-import { registerChatRoutes } from "./replit_integrations/chat";
 import { api } from "@shared/routes";
 import { z } from "zod";
 
@@ -14,10 +13,7 @@ export async function registerRoutes(
   await setupAuth(app);
   registerAuthRoutes(app);
 
-  // 2. Setup Chat
-  registerChatRoutes(app);
-
-  // 3. App Routes (Protected)
+  // 2. App Routes (Protected)
   
   // FSMA Status
   app.get(api.fsma.getStatus.path, isAuthenticated, async (req: any, res) => {

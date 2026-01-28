@@ -13,7 +13,6 @@ import LandingPage from "@/pages/landing";
 import Dashboard from "@/pages/dashboard";
 import Onboarding from "@/pages/onboarding";
 import RecordsPage from "@/pages/records";
-import ChatPage from "@/pages/chat";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { user, isLoading } = useAuth();
@@ -60,9 +59,6 @@ function Router() {
       </Route>
       <Route path="/records/:type?">
         <ProtectedRoute component={RecordsPage} />
-      </Route>
-      <Route path="/chat">
-        <ProtectedRoute component={ChatPage} />
       </Route>
       <Route component={NotFound} />
     </Switch>

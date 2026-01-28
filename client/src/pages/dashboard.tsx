@@ -11,7 +11,29 @@ import { Link, useLocation } from "wouter";
 import { format } from "date-fns";
 
 function StatusCard({ status }: { status: any }) {
-  if (!status) return null;
+  if (!status) {
+    return (
+      <Card className="border-2 border-muted bg-muted/30">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg font-bold">FSMA Status</CardTitle>
+            <ShieldCheck className="h-6 w-6 opacity-50" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-serif font-bold mb-2 text-muted-foreground">Not Determined</div>
+          <p className="text-sm text-muted-foreground">
+            Complete the wizard to determine your status.
+          </p>
+        </CardContent>
+        <CardFooter className="pt-2">
+          <Link href="/onboarding">
+            <Button variant="outline" size="sm">Take Wizard</Button>
+          </Link>
+        </CardFooter>
+      </Card>
+    );
+  }
 
   const getStatusColor = () => {
     if (status.isExempt && status.exemptionType === "qualified") return "text-amber-600 bg-amber-50 border-amber-200";
@@ -114,24 +136,6 @@ export default function Dashboard() {
     );
   }
 
-  // Redirect to wizard if no status
-  if (!status) {
-    return (
-      <LayoutShell>
-        <Alert className="max-w-2xl mx-auto border-primary/50 bg-primary/5">
-          <AlertTriangle className="h-4 w-4 text-primary" />
-          <AlertTitle>Setup Required</AlertTitle>
-          <AlertDescription className="flex items-center justify-between mt-2">
-            <span>You haven't completed the FSMA compliance wizard yet.</span>
-            <Link href="/onboarding">
-              <Button size="sm">Start Wizard</Button>
-            </Link>
-          </AlertDescription>
-        </Alert>
-      </LayoutShell>
-    );
-  }
-
   return (
     <LayoutShell>
       <div className="space-y-8">
@@ -140,12 +144,20 @@ export default function Dashboard() {
             <h1 className="text-3xl font-serif font-bold text-foreground">Dashboard</h1>
             <p className="text-muted-foreground">Overview of your farm's food safety compliance.</p>
           </div>
-          <Link href="/chat">
-            <Button className="shadow-lg shadow-primary/20">
-              Ask AI Assistant
-            </Button>
-          </Link>
         </div>
+
+        {!status && (
+          <Alert className="border-secondary/50 bg-secondary/10">
+            <AlertTriangle className="h-4 w-4 text-secondary" />
+            <AlertTitle>Not sure about your FSMA status?</AlertTitle>
+            <AlertDescription className="flex items-center justify-between mt-2">
+              <span>Take our quick wizard to determine your compliance requirements.</span>
+              <Link href="/onboarding">
+                <Button size="sm" variant="secondary">Start Wizard</Button>
+              </Link>
+            </AlertDescription>
+          </Alert>
+        )}
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <StatusCard status={status} />

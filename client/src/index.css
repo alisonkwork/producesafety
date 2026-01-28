@@ -43,11 +43,12 @@
   --warning: 38 92% 50%;
   --success: 142 76% 36%;
 
-  /* Secondary/Accent */
-  --secondary: 140 30% 96%;
-  --secondary-foreground: 142 76% 26%;
-  --accent: 140 30% 96%;
-  --accent-foreground: 142 76% 26%;
+  /* Chart colors */
+  --chart-1: 142 70% 25%;
+  --chart-2: 25 90% 45%;
+  --chart-3: 45 100% 52%;
+  --chart-4: 120 45% 40%;
+  --chart-5: 35 75% 40%;
 
   --popover: 0 0% 100%;
   --popover-foreground: 120 40% 10%;

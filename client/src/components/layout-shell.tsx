@@ -5,7 +5,6 @@ import {
   Droplets, 
   UserCheck, 
   ClipboardList, 
-  MessageSquare,
   LogOut,
   LayoutDashboard,
   Menu,
@@ -33,7 +32,6 @@ export function LayoutShell({ children }: LayoutShellProps) {
     { name: 'Water Records', href: '/records/water', icon: Droplets },
     { name: 'Soil Amendments', href: '/records/soil', icon: Sprout },
     { name: 'Other Records', href: '/records/general', icon: ClipboardList },
-    { name: 'AI Assistant', href: '/chat', icon: MessageSquare },
   ];
 
   const NavContent = () => (
