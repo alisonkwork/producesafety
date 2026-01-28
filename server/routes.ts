@@ -101,26 +101,5 @@ export async function registerRoutes(
     res.status(204).send();
   });
 
-  // User Preferences
-  app.get(api.preferences.get.path, isAuthenticated, async (req: any, res) => {
-    const userId = req.user.claims.sub;
-    const prefs = await storage.getUserPreferences(userId);
-    res.json(prefs);
-  });
-
-  app.put(api.preferences.update.path, isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const input = api.preferences.update.input.parse(req.body);
-      const prefs = await storage.updateUserPreferences(userId, input);
-      res.json(prefs);
-    } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(400).json({ message: err.errors[0].message });
-      }
-      throw err;
-    }
-  });
-
   return httpServer;
 }

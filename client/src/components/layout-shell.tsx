@@ -9,8 +9,7 @@ import {
   LayoutDashboard,
   Menu,
   X,
-  FileText,
-  SprayCan
+  FileText
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -30,10 +29,9 @@ export function LayoutShell({ children }: LayoutShellProps) {
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'FSMA Wizard', href: '/onboarding', icon: FileText },
     { name: 'Worker Training', href: '/records/training', icon: UserCheck },
-    { name: 'Cleaning & Sanitizing', href: '/records/cleaning', icon: SprayCan },
-    { name: 'Agricultural Water', href: '/records/water', icon: Droplets },
-    { name: 'Compost', href: '/records/soil', icon: Sprout },
-    { name: 'All Records', href: '/records/general', icon: ClipboardList },
+    { name: 'Water Records', href: '/records/water', icon: Droplets },
+    { name: 'Soil Amendments', href: '/records/soil', icon: Sprout },
+    { name: 'Other Records', href: '/records/general', icon: ClipboardList },
   ];
 
   const NavContent = () => (
