@@ -5,9 +5,55 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, FileText, ArrowRight, Leaf, Droplets, Users, ClipboardList, Sparkles } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { ShieldCheck, FileText, ArrowRight, Leaf, Droplets, Users, ClipboardList, Sparkles, SprayCan, Settings } from "lucide-react";
 import { Link } from "wouter";
 import { format } from "date-fns";
+import { useState, useEffect } from "react";
+
+type DashboardBoxKey = "workerTraining" | "cleaningSanitizing" | "agriculturalWater" | "compost" | "allRecords";
+
+interface DashboardPreferences {
+  workerTraining: boolean;
+  cleaningSanitizing: boolean;
+  agriculturalWater: boolean;
+  compost: boolean;
+  allRecords: boolean;
+}
+
+const DEFAULT_PREFERENCES: DashboardPreferences = {
+  workerTraining: true,
+  cleaningSanitizing: true,
+  agriculturalWater: true,
+  compost: true,
+  allRecords: true,
+};
+
+function useDashboardPreferences() {
+  const [preferences, setPreferences] = useState<DashboardPreferences>(DEFAULT_PREFERENCES);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("dashboardPreferences");
+    if (saved) {
+      try {
+        setPreferences({ ...DEFAULT_PREFERENCES, ...JSON.parse(saved) });
+      } catch {
+        setPreferences(DEFAULT_PREFERENCES);
+      }
+    }
+    setIsLoaded(true);
+  }, []);
+
+  const updatePreference = (key: DashboardBoxKey, value: boolean) => {
+    const newPreferences = { ...preferences, [key]: value };
+    setPreferences(newPreferences);
+    localStorage.setItem("dashboardPreferences", JSON.stringify(newPreferences));
+  };
+
+  return { preferences, updatePreference, isLoaded };
+}
 
 function HeroSection({ hasStatus }: { hasStatus: boolean }) {
   return (
@@ -204,27 +250,60 @@ function RecentRecords({ records }: { records: any[] }) {
   );
 }
 
-function StatsBar({ records }: { records: any[] }) {
-  const trainingCount = records.filter(r => r.type === 'training').length;
-  const waterCount = records.filter(r => r.type === 'water').length;
-  const soilCount = records.filter(r => r.type === 'soil').length;
-
-  const stats = [
-    { label: "Training Records", value: trainingCount, icon: Users, color: "text-purple-600" },
-    { label: "Water Tests", value: waterCount, icon: Droplets, color: "text-blue-600" },
-    { label: "Soil Amendments", value: soilCount, icon: Leaf, color: "text-amber-600" },
-    { label: "Total Records", value: records.length, icon: FileText, color: "text-primary" },
-  ];
+function DashboardSettings({ 
+  preferences, 
+  updatePreference,
+  isOpen,
+  onToggle
+}: { 
+  preferences: DashboardPreferences;
+  updatePreference: (key: DashboardBoxKey, value: boolean) => void;
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
+  const boxLabels: Record<DashboardBoxKey, string> = {
+    workerTraining: "Worker Training",
+    cleaningSanitizing: "Cleaning & Sanitizing",
+    agriculturalWater: "Agricultural Water",
+    compost: "Compost",
+    allRecords: "All Records",
+  };
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {stats.map((stat) => (
-        <Card key={stat.label} className="text-center py-4">
-          <stat.icon className={`h-8 w-8 mx-auto mb-2 ${stat.color}`} />
-          <div className="text-3xl font-bold font-serif">{stat.value}</div>
-          <div className="text-xs text-muted-foreground">{stat.label}</div>
+    <div className="flex flex-col items-end gap-2">
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        onClick={onToggle}
+        className="text-muted-foreground hover:text-foreground"
+        data-testid="button-dashboard-settings"
+      >
+        <Settings className="h-4 w-4 mr-2" />
+        Customize Dashboard
+      </Button>
+      
+      {isOpen && (
+        <Card className="w-full max-w-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">Show/Hide Boxes</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {(Object.keys(boxLabels) as DashboardBoxKey[]).map((key) => (
+              <div key={key} className="flex items-center justify-between">
+                <Label htmlFor={`toggle-${key}`} className="text-sm">
+                  {boxLabels[key]}
+                </Label>
+                <Switch
+                  id={`toggle-${key}`}
+                  checked={preferences[key]}
+                  onCheckedChange={(checked) => updatePreference(key, checked)}
+                  data-testid={`switch-${key}`}
+                />
+              </div>
+            ))}
+          </CardContent>
         </Card>
-      ))}
+      )}
     </div>
   );
 }
@@ -232,67 +311,96 @@ function StatsBar({ records }: { records: any[] }) {
 export default function Dashboard() {
   const { status, isLoading: statusLoading } = useFsmaStatus();
   const { records, isLoading: recordsLoading } = useRecords();
+  const { preferences, updatePreference, isLoaded } = useDashboardPreferences();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
-  if (statusLoading || recordsLoading) {
+  if (statusLoading || recordsLoading || !isLoaded) {
     return (
       <LayoutShell>
         <div className="space-y-6">
           <Skeleton className="h-48 rounded-2xl" />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)}
-          </div>
+          <Skeleton className="h-32 rounded-xl" />
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-48 rounded-xl" />)}
+            {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-48 rounded-xl" />)}
           </div>
         </div>
       </LayoutShell>
     );
   }
 
+  const quickActionCards = [
+    {
+      key: "workerTraining" as DashboardBoxKey,
+      title: "Worker Training",
+      description: "Log employee food safety training sessions",
+      icon: Users,
+      href: "/records/training",
+      gradient: "bg-gradient-to-br from-purple-600 to-purple-800",
+    },
+    {
+      key: "cleaningSanitizing" as DashboardBoxKey,
+      title: "Cleaning & Sanitizing",
+      description: "Track equipment and surface sanitation logs",
+      icon: SprayCan,
+      href: "/records/cleaning",
+      gradient: "bg-gradient-to-br from-cyan-500 to-teal-600",
+    },
+    {
+      key: "agriculturalWater" as DashboardBoxKey,
+      title: "Agricultural Water",
+      description: "Record agricultural water test results",
+      icon: Droplets,
+      href: "/records/water",
+      gradient: "bg-gradient-to-br from-blue-500 to-blue-700",
+    },
+    {
+      key: "compost" as DashboardBoxKey,
+      title: "Compost",
+      description: "Track biological soil amendments and compost",
+      icon: Leaf,
+      href: "/records/soil",
+      gradient: "bg-gradient-to-br from-amber-500 to-orange-600",
+    },
+    {
+      key: "allRecords" as DashboardBoxKey,
+      title: "All Records",
+      description: "View and manage all compliance records",
+      icon: ClipboardList,
+      href: "/records/general",
+      gradient: "bg-gradient-to-br from-emerald-600 to-teal-700",
+    },
+  ];
+
+  const visibleCards = quickActionCards.filter(card => preferences[card.key]);
+
   return (
     <LayoutShell>
       <div className="space-y-8">
         <HeroSection hasStatus={!!status} />
 
-        <StatsBar records={records} />
+        <StatusCard status={status} />
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <QuickActionCard
-            title="Worker Training"
-            description="Log employee food safety training sessions"
-            icon={Users}
-            href="/records/training"
-            gradient="bg-gradient-to-br from-purple-600 to-purple-800"
-          />
-          <QuickActionCard
-            title="Water Testing"
-            description="Record agricultural water test results"
-            icon={Droplets}
-            href="/records/water"
-            gradient="bg-gradient-to-br from-blue-500 to-cyan-600"
-          />
-          <QuickActionCard
-            title="Soil Amendments"
-            description="Track biological soil amendments"
-            icon={Leaf}
-            href="/records/soil"
-            gradient="bg-gradient-to-br from-amber-500 to-orange-600"
-          />
-          <QuickActionCard
-            title="All Records"
-            description="View and manage all compliance records"
-            icon={ClipboardList}
-            href="/records/general"
-            gradient="bg-gradient-to-br from-emerald-600 to-teal-700"
-          />
+        <DashboardSettings 
+          preferences={preferences}
+          updatePreference={updatePreference}
+          isOpen={settingsOpen}
+          onToggle={() => setSettingsOpen(!settingsOpen)}
+        />
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {visibleCards.map((card) => (
+            <QuickActionCard
+              key={card.key}
+              title={card.title}
+              description={card.description}
+              icon={card.icon}
+              href={card.href}
+              gradient={card.gradient}
+            />
+          ))}
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <RecentRecords records={records} />
-          </div>
-          <StatusCard status={status} />
-        </div>
+        <RecentRecords records={records} />
       </div>
     </LayoutShell>
   );
