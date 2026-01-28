@@ -1,9 +1,10 @@
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
 import {
-  fsmaStatus, records,
+  fsmaStatus, records, userPreferences, defaultDashboardBoxes,
   type FsmaStatus, type InsertFsmaStatus,
-  type RecordItem, type InsertRecord, type UpdateFsmaStatusRequest, type CreateRecordRequest
+  type RecordItem, type InsertRecord, type UpdateFsmaStatusRequest, type CreateRecordRequest,
+  type UserPreferences, type UpdateUserPreferencesRequest
 } from "@shared/schema";
 
 export interface IStorage {
@@ -17,6 +18,10 @@ export interface IStorage {
   createRecord(userId: string, record: CreateRecordRequest): Promise<RecordItem>;
   updateRecord(id: number, userId: string, record: Partial<CreateRecordRequest>): Promise<RecordItem | undefined>;
   deleteRecord(id: number, userId: string): Promise<void>;
+
+  // User Preferences
+  getUserPreferences(userId: string): Promise<UserPreferences>;
+  updateUserPreferences(userId: string, prefs: UpdateUserPreferencesRequest): Promise<UserPreferences>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -86,6 +91,34 @@ export class DatabaseStorage implements IStorage {
     if (!existing || existing.userId !== userId) return;
 
     await db.delete(records).where(eq(records.id, id));
+  }
+
+  async getUserPreferences(userId: string): Promise<UserPreferences> {
+    const [prefs] = await db.select().from(userPreferences).where(eq(userPreferences.userId, userId));
+    if (prefs) return prefs;
+    
+    // Create default preferences if none exist
+    const [created] = await db.insert(userPreferences)
+      .values({ userId, dashboardBoxes: defaultDashboardBoxes })
+      .returning();
+    return created;
+  }
+
+  async updateUserPreferences(userId: string, updates: UpdateUserPreferencesRequest): Promise<UserPreferences> {
+    const [existing] = await db.select().from(userPreferences).where(eq(userPreferences.userId, userId));
+    
+    if (existing) {
+      const [updated] = await db.update(userPreferences)
+        .set({ ...updates, updatedAt: new Date() })
+        .where(eq(userPreferences.id, existing.id))
+        .returning();
+      return updated;
+    } else {
+      const [created] = await db.insert(userPreferences)
+        .values({ userId, ...updates })
+        .returning();
+      return created;
+    }
   }
 }
 

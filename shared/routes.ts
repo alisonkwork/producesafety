@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { insertFsmaStatusSchema, insertRecordSchema, records, fsmaStatus } from './schema';
+import { insertFsmaStatusSchema, insertRecordSchema, insertUserPreferencesSchema, records, fsmaStatus, userPreferences } from './schema';
 
 export const errorSchemas = {
   validation: z.object({
@@ -85,6 +85,25 @@ export const api = {
         401: errorSchemas.unauthorized,
       }
     },
+  },
+  preferences: {
+    get: {
+      method: 'GET' as const,
+      path: '/api/preferences',
+      responses: {
+        200: z.custom<typeof userPreferences.$inferSelect>(),
+        401: errorSchemas.unauthorized,
+      }
+    },
+    update: {
+      method: 'PUT' as const,
+      path: '/api/preferences',
+      input: insertUserPreferencesSchema.omit({ userId: true }).partial(),
+      responses: {
+        200: z.custom<typeof userPreferences.$inferSelect>(),
+        401: errorSchemas.unauthorized,
+      }
+    }
   }
 };
 

@@ -2,7 +2,13 @@
 
 ## Overview
 
-ProduceSafe is a full-stack web application designed to help farmers and produce handlers navigate FDA Food Safety Modernization Act (FSMA) Produce Safety Rule compliance. The application provides an exemption status wizard to determine regulatory coverage, digital record-keeping for compliance documentation (worker training, water testing, soil amendments), and a dashboard for monitoring compliance status.
+ProduceSafe is a full-stack web application designed to help farmers and produce handlers navigate FDA Food Safety Modernization Act (FSMA) Produce Safety Rule compliance. The application provides an exemption status wizard to determine regulatory coverage, digital record-keeping for compliance documentation (worker training, cleaning & sanitizing, agricultural water, compost), and a customizable dashboard for monitoring compliance status.
+
+### Dashboard Features
+- **FSMA Status** card at top showing exemption status
+- **Customizable action boxes**: Worker Training, Cleaning & Sanitizing, Agricultural Water, Compost, All Records
+- Users can show/hide boxes they don't need (e.g., hide Compost if not used)
+- Preferences persist per user via `user_preferences` table
 
 ## User Preferences
 

@@ -28,6 +28,15 @@ export const records = pgTable("records", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const defaultDashboardBoxes = ['training', 'cleaning', 'water', 'compost', 'general'];
+
+export const userPreferences = pgTable("user_preferences", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => users.id).unique(),
+  dashboardBoxes: jsonb("dashboard_boxes").$type<string[]>().default(defaultDashboardBoxes),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const insertFsmaStatusSchema = createInsertSchema(fsmaStatus).omit({ id: true, updatedAt: true });
 export const insertRecordSchema = createInsertSchema(records).omit({ id: true, createdAt: true });
 
@@ -39,3 +48,8 @@ export type InsertRecord = z.infer<typeof insertRecordSchema>;
 export type CreateRecordRequest = Omit<InsertRecord, 'userId'>;
 export type UpdateRecordRequest = Partial<CreateRecordRequest>;
 export type UpdateFsmaStatusRequest = Omit<InsertFsmaStatus, 'userId'>;
+
+export const insertUserPreferencesSchema = createInsertSchema(userPreferences).omit({ id: true, updatedAt: true });
+export type UserPreferences = typeof userPreferences.$inferSelect;
+export type InsertUserPreferences = z.infer<typeof insertUserPreferencesSchema>;
+export type UpdateUserPreferencesRequest = Partial<Omit<InsertUserPreferences, 'userId'>>;
