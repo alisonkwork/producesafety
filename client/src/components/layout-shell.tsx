@@ -35,10 +35,12 @@ export function LayoutShell({ children }: LayoutShellProps) {
   ];
 
   const NavContent = () => (
-    <div className="flex flex-col h-full bg-card border-r border-border">
-      <div className="p-6 border-b border-border/50">
-        <Link href="/dashboard" className="flex items-center gap-2 font-serif text-xl font-bold text-primary">
-          <Sprout className="h-6 w-6" />
+    <div className="flex flex-col h-full bg-gradient-to-b from-emerald-800 to-emerald-900 text-white">
+      <div className="p-6 border-b border-white/10">
+        <Link href="/dashboard" className="flex items-center gap-2 font-serif text-xl font-bold text-white">
+          <div className="p-1.5 bg-amber-400 rounded-lg">
+            <Sprout className="h-5 w-5 text-emerald-900" />
+          </div>
           <span>ProduceSafe</span>
         </Link>
       </div>
@@ -52,12 +54,12 @@ export function LayoutShell({ children }: LayoutShellProps) {
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 group cursor-pointer",
                   isActive
-                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
-                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                    ? "bg-white/20 text-white shadow-md"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
                 )}
                 onClick={() => setIsMobileOpen(false)}
               >
-                <item.icon className={cn("h-5 w-5", isActive ? "text-primary-foreground" : "text-muted-foreground group-hover:text-primary")} />
+                <item.icon className={cn("h-5 w-5", isActive ? "text-amber-400" : "text-white/60 group-hover:text-amber-400")} />
                 {item.name}
               </div>
             </Link>
@@ -65,19 +67,19 @@ export function LayoutShell({ children }: LayoutShellProps) {
         })}
       </div>
 
-      <div className="p-4 border-t border-border/50 bg-secondary/30">
+      <div className="p-4 border-t border-white/10 bg-black/20">
         <div className="flex items-center gap-3 mb-4 px-2">
-          <div className="h-8 w-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold">
+          <div className="h-8 w-8 rounded-full bg-amber-400 text-emerald-900 flex items-center justify-center font-bold text-sm">
             {user?.firstName?.[0] || user?.email?.[0] || "U"}
           </div>
           <div className="overflow-hidden">
-            <p className="text-sm font-medium truncate">{user?.firstName || 'User'}</p>
-            <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+            <p className="text-sm font-medium truncate text-white">{user?.firstName || 'User'}</p>
+            <p className="text-xs text-white/60 truncate">{user?.email}</p>
           </div>
         </div>
         <Button 
-          variant="outline" 
-          className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/20"
+          variant="ghost" 
+          className="w-full justify-start text-white/70 hover:text-white hover:bg-white/10"
           onClick={() => logout()}
         >
           <LogOut className="mr-2 h-4 w-4" />
