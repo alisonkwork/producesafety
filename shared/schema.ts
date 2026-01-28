@@ -3,9 +3,8 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { users } from "./models/auth";
 
-// Export Auth & Chat models so they are included in the schema
+// Export Auth models
 export * from "./models/auth";
-export * from "./models/chat";
 
 export const fsmaStatus = pgTable("fsma_status", {
   id: serial("id").primaryKey(),

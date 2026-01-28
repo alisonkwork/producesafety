@@ -10,8 +10,16 @@
   --font-serif: 'Merriweather', serif;
 
   /* Fresh Green - Primary Action */
-  --primary: 142 76% 36%;       /* #16a34a equivalent */
+  --primary: 142 70% 25%;       /* Forest Green #1B4332 equivalent */
   --primary-foreground: 0 0% 100%;
+
+  /* Harvest Orange - Secondary */
+  --secondary: 25 90% 45%;      /* Harvest Orange #E85D04 equivalent */
+  --secondary-foreground: 0 0% 100%;
+
+  /* Sunflower Yellow - Accent */
+  --accent: 45 100% 52%;        /* Sunflower Yellow #FFBA08 equivalent */
+  --accent-foreground: 45 100% 10%;
 
   /* Earthy Dark - Foreground/Text */
   --foreground: 120 40% 10%;    /* Very dark green-gray */
@@ -19,7 +27,7 @@
   --muted-foreground: 120 10% 45%;
 
   /* Clean Backgrounds */
-  --background: 0 0% 100%;
+  --background: 120 20% 98%;    /* Light Sage #F8FAF8 equivalent */
   --card: 0 0% 100%;
   --card-foreground: 120 40% 10%;
 
