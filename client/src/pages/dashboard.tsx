@@ -18,7 +18,7 @@ function HeroSection({ hasStatus }: { hasStatus: boolean }) {
           <Sparkles className="h-5 w-5 text-yellow-300" />
           <span className="text-sm font-medium text-white/90 uppercase tracking-wide">ProduceSafe Dashboard</span>
         </div>
-        <h1 className="text-3xl md:text-4xl font-serif font-bold mb-3">
+        <h1 className="text-3xl md:text-4xl text-white font-serif font-bold mb-3">
           {hasStatus ? "Welcome Back to Your Farm" : "Grow Safely, Sell Confidently"}
         </h1>
         <p className="text-lg text-white/80 max-w-2xl mb-6">
