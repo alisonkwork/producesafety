@@ -85,170 +85,48 @@ function HeroSection({ hasStatus }: { hasStatus: boolean }) {
   );
 }
 
-function StatusCard({ status }: { status: any }) {
-  if (!status) {
-    return (
-      <Card className="border-2 border-dashed border-orange-300 bg-orange-50/50 dark:bg-orange-950/20">
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between gap-2">
-            <CardTitle className="text-lg font-bold text-orange-800 dark:text-orange-200">FSMA Status</CardTitle>
-            <ShieldCheck className="h-6 w-6 text-orange-500" />
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-serif font-bold mb-2 text-orange-700 dark:text-orange-300">Not Yet Determined</div>
-          <p className="text-sm text-orange-600/80 dark:text-orange-400/80">
-            Take our quick wizard to find out if you're exempt.
-          </p>
-        </CardContent>
-        <CardFooter className="pt-2">
-          <Link href="/onboarding">
-            <Button className="bg-orange-500 hover:bg-orange-600 text-white">Start Wizard</Button>
-          </Link>
-        </CardFooter>
-      </Card>
-    );
-  }
 
-  const getStatusStyle = () => {
-    if (status.isExempt && status.exemptionType === "qualified") {
-      return { bg: "bg-amber-50 dark:bg-amber-950/30", border: "border-amber-300", text: "text-amber-800 dark:text-amber-200" };
-    }
-    if (status.isExempt) {
-      return { bg: "bg-emerald-50 dark:bg-emerald-950/30", border: "border-emerald-300", text: "text-emerald-800 dark:text-emerald-200" };
-    }
-    return { bg: "bg-sky-50 dark:bg-sky-950/30", border: "border-sky-300", text: "text-sky-800 dark:text-sky-200" };
-  };
-
-  const style = getStatusStyle();
-  const statusTitle = status.isExempt 
-    ? (status.exemptionType === "qualified" ? "Qualified Exempt" : "Exempt") 
-    : "Covered";
-
-  return (
-    <Card className={`border-2 ${style.border} ${style.bg}`}>
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between gap-2">
-          <CardTitle className={`text-lg font-bold ${style.text}`}>FSMA Status</CardTitle>
-          <ShieldCheck className={`h-6 w-6 ${style.text}`} />
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className={`text-3xl font-serif font-bold mb-2 ${style.text}`}>{statusTitle}</div>
-        <p className={`text-sm ${style.text} opacity-80`}>
-          Based on <strong>{status.annualSales}</strong> in annual sales.
-        </p>
-      </CardContent>
-      <CardFooter className="pt-2">
-        <Link href="/onboarding">
-          <Button variant="ghost" size="sm" className={style.text}>Update Status</Button>
-        </Link>
-      </CardFooter>
-    </Card>
-  );
-}
 
 function QuickActionCard({ 
   title, 
   description, 
   icon: Icon, 
   href, 
-  gradient 
+  gradient,
+  iconBg
 }: { 
   title: string; 
   description: string; 
   icon: any; 
   href: string;
   gradient: string;
+  iconBg: string;
 }) {
   return (
     <Link href={href}>
-      <Card className={`${gradient} text-white border-0 shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] cursor-pointer h-full`}>
+      <Card className={`${gradient} text-white border border-transparent shadow-sm hover:shadow-lg transition-all hover:border-emerald-400 cursor-pointer h-full`}>
         <CardHeader className="pb-2">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-white/20 rounded-lg">
+            <div className={`${iconBg} p-2 rounded-lg`}>
               <Icon className="h-6 w-6" />
             </div>
-            <CardTitle className="text-lg font-bold text-white">{title}</CardTitle>
+            <CardTitle className="text-lg font-bold text-stone-600">{title}</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-white/80 text-sm">{description}</p>
+          <p className="text-stone-400 text-sm">{description}</p>
         </CardContent>
         <CardFooter>
-          <Button variant="ghost" className="text-white hover:bg-white/20 p-0">
-            Get Started <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          
         </CardFooter>
       </Card>
     </Link>
   );
 }
 
-function RecentRecords({ records }: { records: any[] }) {
-  const typeColors: Record<string, string> = {
-    training: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
-    water: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-    soil: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
-    harvest: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
-    cleaning: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300",
-  };
 
-  return (
-    <Card className="h-full">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <FileText className="h-5 w-5 text-primary" />
-          Recent Records
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {records.length === 0 ? (
-          <div className="text-center py-8">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
-              <ClipboardList className="h-8 w-8 text-muted-foreground" />
-            </div>
-            <p className="text-muted-foreground mb-4">No records yet. Start tracking your compliance!</p>
-            <Link href="/records/training">
-              <Button className="gradient-primary text-white">Create First Record</Button>
-            </Link>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {records.slice(0, 5).map((record) => (
-              <div 
-                key={record.id} 
-                className="flex items-center justify-between p-3 rounded-xl bg-muted/50 hover:bg-muted transition-colors border border-transparent hover:border-border"
-                data-testid={`record-item-${record.id}`}
-              >
-                <div className="flex items-center gap-3">
-                  <Badge className={typeColors[record.type] || "bg-gray-100 text-gray-700"}>
-                    {record.type}
-                  </Badge>
-                  <div>
-                    <h4 className="font-medium text-sm">{record.title}</h4>
-                    <p className="text-xs text-muted-foreground">
-                      {format(new Date(record.date), "MMM d, yyyy")}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-      {records.length > 0 && (
-        <CardFooter>
-          <Link href="/records/general" className="w-full">
-            <Button variant="outline" className="w-full">
-              View All Records <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </CardFooter>
-      )}
-    </Card>
-  );
-}
+
+
 
 function DashboardSettings({ 
   preferences, 
@@ -335,7 +213,8 @@ export default function Dashboard() {
       description: "Log employee food safety training sessions",
       icon: Users,
       href: "/records/training",
-      gradient: "bg-gradient-to-br from-purple-600 to-purple-800",
+      gradient: "white",
+      iconBg: "bg-red-200",
     },
     {
       key: "cleaningSanitizing" as DashboardBoxKey,
@@ -343,7 +222,8 @@ export default function Dashboard() {
       description: "Track equipment and surface sanitation logs",
       icon: SprayCan,
       href: "/records/cleaning",
-      gradient: "bg-gradient-to-br from-cyan-500 to-teal-600",
+      gradient: "white",
+      iconBg: "bg-orange-200",
     },
     {
       key: "agriculturalWater" as DashboardBoxKey,
@@ -351,7 +231,8 @@ export default function Dashboard() {
       description: "Record agricultural water test results",
       icon: Droplets,
       href: "/records/water",
-      gradient: "bg-gradient-to-br from-blue-500 to-blue-700",
+      gradient: "white",
+      iconBg: "bg-amber-200",
     },
     {
       key: "compost" as DashboardBoxKey,
@@ -359,7 +240,8 @@ export default function Dashboard() {
       description: "Track biological soil amendments and compost",
       icon: Leaf,
       href: "/records/soil",
-      gradient: "bg-gradient-to-br from-amber-500 to-orange-600",
+      gradient: "white",
+      iconBg: "bg-sky-200",
     },
     {
       key: "allRecords" as DashboardBoxKey,
@@ -367,7 +249,8 @@ export default function Dashboard() {
       description: "View and manage all compliance records",
       icon: ClipboardList,
       href: "/records/general",
-      gradient: "bg-gradient-to-br from-emerald-600 to-teal-700",
+      gradient: "white",
+      iconBg: "bg-fuchsia-200",
     },
   ];
 
@@ -378,7 +261,7 @@ export default function Dashboard() {
       <div className="space-y-8">
         <HeroSection hasStatus={!!status} />
 
-        <StatusCard status={status} />
+        
 
         <DashboardSettings 
           preferences={preferences}
@@ -386,6 +269,8 @@ export default function Dashboard() {
           isOpen={settingsOpen}
           onToggle={() => setSettingsOpen(!settingsOpen)}
         />
+
+        
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {visibleCards.map((card) => (
@@ -396,12 +281,80 @@ export default function Dashboard() {
               icon={card.icon}
               href={card.href}
               gradient={card.gradient}
+              iconBg={card.iconBg}
             />
+      
           ))}
+
+          <StatusCard status={status} />
+          
         </div>
 
-        <RecentRecords records={records} />
+        
       </div>
     </LayoutShell>
+  );
+}
+
+function StatusCard({ status }: { status: any }) {
+  if (!status) {
+    return (
+      <Card className="border-2 border-dashed border-orange-300 bg-orange-50/50 dark:bg-orange-950/20">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between gap-2">
+            <CardTitle className="text-lg font-bold text-orange-800 dark:text-orange-200">FSMA Status</CardTitle>
+            <ShieldCheck className="h-6 w-6 text-orange-500" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-serif font-bold mb-2 text-orange-700 dark:text-orange-300">Not Yet Determined</div>
+          <p className="text-sm text-orange-600/80 dark:text-orange-400/80">
+            Take our quick wizard to find out if you're exempt.
+          </p>
+        </CardContent>
+        <CardFooter className="pt-2">
+          <Link href="/onboarding">
+            <Button className="bg-orange-500 hover:bg-orange-600 text-white">Start Wizard</Button>
+          </Link>
+        </CardFooter>
+      </Card>
+    );
+  }
+
+  const getStatusStyle = () => {
+    if (status.isExempt && status.exemptionType === "qualified") {
+      return { bg: "bg-amber-50 dark:bg-amber-950/30", border: "border-amber-300", text: "text-amber-800 dark:text-amber-200" };
+    }
+    if (status.isExempt) {
+      return { bg: "bg-emerald-50 dark:bg-emerald-950/30", border: "border-emerald-300", text: "text-emerald-800 dark:text-emerald-200" };
+    }
+    return { bg: "bg-sky-50 dark:bg-sky-950/30", border: "border-sky-300", text: "text-sky-800 dark:text-sky-200" };
+  };
+
+  const style = getStatusStyle();
+  const statusTitle = status.isExempt 
+    ? (status.exemptionType === "qualified" ? "Qualified Exempt" : "Exempt") 
+    : "Covered";
+
+  return (
+    <Card className={`border-2 ${style.border} ${style.bg}`}>
+      <CardHeader className="pb-2">
+        <div className="flex items-center justify-between gap-2">
+          <CardTitle className={`text-lg font-bold ${style.text}`}>FSMA Status</CardTitle>
+          <ShieldCheck className={`h-6 w-6 ${style.text}`} />
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className={`text-3xl font-serif font-bold mb-2 ${style.text}`}>{statusTitle}</div>
+        <p className={`text-sm ${style.text} opacity-80`}>
+          Based on <strong>{status.annualSales}</strong> in annual sales.
+        </p>
+      </CardContent>
+      <CardFooter className="pt-2">
+        <Link href="/onboarding">
+          <Button variant="ghost" size="sm" className={style.text}>Update Status</Button>
+        </Link>
+      </CardFooter>
+    </Card>
   );
 }
