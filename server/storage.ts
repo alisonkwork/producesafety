@@ -1,38 +1,92 @@
-import { type User, type InsertUser } from "@shared/schema";
-import { randomUUID } from "crypto";
-
-// modify the interface with any CRUD methods
-// you might need
+import { db } from "./db";
+import { eq, desc } from "drizzle-orm";
+import {
+  fsmaStatus, records,
+  type FsmaStatus, type InsertFsmaStatus,
+  type RecordItem, type InsertRecord, type UpdateFsmaStatusRequest, type CreateRecordRequest
+} from "@shared/schema";
 
 export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  // FSMA Status
+  getFsmaStatus(userId: string): Promise<FsmaStatus | undefined>;
+  updateFsmaStatus(userId: string, status: UpdateFsmaStatusRequest): Promise<FsmaStatus>;
+
+  // Records
+  getRecords(userId: string, type?: string): Promise<RecordItem[]>;
+  getRecord(id: number): Promise<RecordItem | undefined>;
+  createRecord(userId: string, record: CreateRecordRequest): Promise<RecordItem>;
+  updateRecord(id: number, userId: string, record: Partial<CreateRecordRequest>): Promise<RecordItem | undefined>;
+  deleteRecord(id: number, userId: string): Promise<void>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-
-  constructor() {
-    this.users = new Map();
+export class DatabaseStorage implements IStorage {
+  async getFsmaStatus(userId: string): Promise<FsmaStatus | undefined> {
+    const [status] = await db.select().from(fsmaStatus).where(eq(fsmaStatus.userId, userId));
+    return status;
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+  async updateFsmaStatus(userId: string, statusData: UpdateFsmaStatusRequest): Promise<FsmaStatus> {
+    const [existing] = await db.select().from(fsmaStatus).where(eq(fsmaStatus.userId, userId));
+    
+    if (existing) {
+      const [updated] = await db.update(fsmaStatus)
+        .set({ ...statusData, updatedAt: new Date() })
+        .where(eq(fsmaStatus.id, existing.id))
+        .returning();
+      return updated;
+    } else {
+      const [created] = await db.insert(fsmaStatus)
+        .values({ ...statusData, userId })
+        .returning();
+      return created;
+    }
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+  async getRecords(userId: string, type?: string): Promise<RecordItem[]> {
+    let query = db.select().from(records).where(eq(records.userId, userId)).orderBy(desc(records.date));
+    
+    if (type) {
+      // @ts-ignore - type checking for dynamic where clause
+      query = query.where(eq(records.type, type));
+    }
+    
+    // Filter in memory if double where is tricky with drizzle chaining
+    const results = await query;
+    if (type) {
+      return results.filter(r => r.type === type);
+    }
+    return results;
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+  async getRecord(id: number): Promise<RecordItem | undefined> {
+    const [record] = await db.select().from(records).where(eq(records.id, id));
+    return record;
+  }
+
+  async createRecord(userId: string, record: CreateRecordRequest): Promise<RecordItem> {
+    const [created] = await db.insert(records)
+      .values({ ...record, userId })
+      .returning();
+    return created;
+  }
+
+  async updateRecord(id: number, userId: string, updates: Partial<CreateRecordRequest>): Promise<RecordItem | undefined> {
+    const [existing] = await db.select().from(records).where(eq(records.id, id));
+    if (!existing || existing.userId !== userId) return undefined;
+
+    const [updated] = await db.update(records)
+      .set(updates)
+      .where(eq(records.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteRecord(id: number, userId: string): Promise<void> {
+    const [existing] = await db.select().from(records).where(eq(records.id, id));
+    if (!existing || existing.userId !== userId) return;
+
+    await db.delete(records).where(eq(records.id, id));
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
