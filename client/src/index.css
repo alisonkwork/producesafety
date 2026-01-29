@@ -39,6 +39,16 @@
   --ring: 152 69% 36%;
   --radius: 0.75rem;
 
+  /* Sidebar */
+  --sidebar: 140 45% 92%;
+  --sidebar-foreground: 152 35% 20%;
+  --sidebar-border: 140 20% 84%;
+  --sidebar-ring: 152 50% 36%;
+  --sidebar-primary: 152 69% 31%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 140 40% 86%;
+  --sidebar-accent-foreground: 152 30% 22%;
+
   /* Status Colors */
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
@@ -71,6 +81,15 @@
   --secondary-foreground: 0 0% 100%;
   --accent: 42 85% 55%;
   --accent-foreground: 0 0% 100%;
+
+  --sidebar: 152 22% 18%;
+  --sidebar-foreground: 35 20% 95%;
+  --sidebar-border: 152 18% 24%;
+  --sidebar-ring: 152 45% 45%;
+  --sidebar-primary: 152 60% 45%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 152 25% 26%;
+  --sidebar-accent-foreground: 35 20% 95%;
 }
 
 @layer base {
