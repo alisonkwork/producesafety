@@ -106,7 +106,7 @@ function QuickActionCard({
 }) {
   return (
     <Link href={href}>
-      <Card className={`${gradient} ${isDark ? 'text-white' : 'text-stone-600'} border shadow-sm hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer h-full`}>
+      <Card className={`${gradient} ${isDark ? 'text-white' : 'text-stone-600'} border border-transparent shadow-sm hover:shadow-lg hover:border-emerald-600 transition-all hover:scale-[1.02] cursor-pointer h-full`}>
         <CardHeader className="pb-2">
           <div className="flex items-center gap-3">
             <div className={`p-2 ${iconBg} rounded-lg`}>
@@ -119,9 +119,7 @@ function QuickActionCard({
           <p className={`${isDark ? 'text-white/90' : 'text-stone-400'} text-sm`}>{description}</p>
         </CardContent>
         <CardFooter>
-          <Button variant="ghost" className={`${isDark ? 'text-white hover:bg-white/20' : ''} p-0`}>
-            Get Started <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          
         </CardFooter>
       </Card>
     </Link>
@@ -253,7 +251,7 @@ export default function Dashboard() {
       description: "View and manage all compliance records",
       icon: ClipboardList,
       href: "/records/general",
-      gradient: "bg-emerald-900 text-white shadow-lg",
+      gradient: "bg-emerald-600 text-white shadow-lg",
       iconBg: "bg-emerald-800",
     },
   ];
