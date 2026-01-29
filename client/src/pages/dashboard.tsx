@@ -247,7 +247,7 @@ export default function Dashboard() {
     },
     {
       key: "allRecords" as DashboardBoxKey,
-      title: "All Records",
+      title: "Other Records",
       description: "View and manage all compliance records",
       icon: ClipboardList,
       href: "/records/general",
@@ -268,6 +268,13 @@ export default function Dashboard() {
       
         <StatusCard status={status} />
 
+        <DashboardSettings 
+          preferences={preferences}
+          updatePreference={updatePreference}
+          isOpen={settingsOpen}
+          onToggle={() => setSettingsOpen(!settingsOpen)}
+        />
+
        
         
 
@@ -286,12 +293,7 @@ export default function Dashboard() {
       
           ))}
 
-          <DashboardSettings 
-            preferences={preferences}
-            updatePreference={updatePreference}
-            isOpen={settingsOpen}
-            onToggle={() => setSettingsOpen(!settingsOpen)}
-          />
+         
 
           
 

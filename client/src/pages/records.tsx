@@ -40,7 +40,7 @@ export default function RecordsPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-serif font-bold text-foreground capitalize">{getTypeTitle()}</h1>
-            <p className="text-muted-foreground">Manage your compliance documentation.</p>
+            <p className="text-muted-foreground">Manage your produce safety recordkeeping.</p>
           </div>
           <RecordForm 
             type={type || 'general'} 
@@ -59,7 +59,7 @@ export default function RecordsPage() {
               <Card className="bg-muted/30 border-dashed">
                 <CardContent className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground">
                   <p className="mb-2 text-lg font-medium">No records found</p>
-                  <p>Add your first {type} record to stay compliant.</p>
+                  <p>Add your first {type} record.</p>
                 </CardContent>
               </Card>
             ) : (
