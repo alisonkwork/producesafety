@@ -9,7 +9,11 @@ import {
   LayoutDashboard,
   Menu,
   X,
-  FileText
+  FileText,
+  ListChecks,
+  PawPrint,
+  ClipboardCheck,
+  Library
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -27,11 +31,15 @@ export function LayoutShell({ children }: LayoutShellProps) {
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { name: 'Checklist', href: '/checklist', icon: ListChecks },
     { name: 'FSMA Coverage Tool', href: '/onboarding', icon: FileText },
-    { name: 'Worker Training', href: '/records/training', icon: UserCheck },
-    { name: 'Water Records', href: '/records/water', icon: Droplets },
-    { name: 'Soil Amendments', href: '/records/soil', icon: Sprout },
-    { name: 'Other Records', href: '/records/general', icon: ClipboardList },
+    { name: 'Resources', href: '/resources', icon: Library },
+    { name: 'Worker Training', href: '/resources/training', icon: UserCheck, sub: true },
+    { name: 'Agricultural Water', href: '/resources/water', icon: Droplets, sub: true },
+    { name: 'Soil Amendments', href: '/resources/soil', icon: Sprout, sub: true },
+    { name: 'Postharvest Handling', href: '/resources/postharvest', icon: ClipboardList, sub: true },
+    { name: 'Wildlife & Animals', href: '/resources/wildlife', icon: PawPrint, sub: true },
+    { name: 'Recordkeeping', href: '/resources/recordkeeping', icon: ClipboardCheck, sub: true },
   ];
 
   const NavContent = () => (
@@ -55,11 +63,17 @@ export function LayoutShell({ children }: LayoutShellProps) {
                   "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 group cursor-pointer",
                   isActive
                     ? "bg-white/20 text-white shadow-md"
-                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white",
+                  item.sub && "pl-8 text-xs"
                 )}
                 onClick={() => setIsMobileOpen(false)}
               >
-                <item.icon className={cn("h-5 w-5", isActive ? "text-amber-400" : "text-white/60 group-hover:text-amber-400")} />
+                <item.icon
+                  className={cn(
+                    item.sub ? "h-4 w-4" : "h-5 w-5",
+                    isActive ? "text-amber-400" : "text-white/60 group-hover:text-amber-400"
+                  )}
+                />
                 {item.name}
               </div>
             </Link>

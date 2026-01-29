@@ -13,6 +13,9 @@ import LandingPage from "@/pages/landing";
 import Dashboard from "@/pages/dashboard";
 import Onboarding from "@/pages/onboarding";
 import RecordsPage from "@/pages/records";
+import ChecklistPage from "@/pages/checklist";
+import ChecklistTaskPage from "@/pages/checklist-task";
+import ResourcesPage from "@/pages/resources";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { user, isLoading } = useAuth();
@@ -57,8 +60,17 @@ function Router() {
       <Route path="/onboarding">
         <ProtectedRoute component={Onboarding} />
       </Route>
-      <Route path="/records/:type?">
+      <Route path="/resources">
+        <ProtectedRoute component={ResourcesPage} />
+      </Route>
+      <Route path="/resources/:type">
         <ProtectedRoute component={RecordsPage} />
+      </Route>
+      <Route path="/checklist/:id">
+        <ProtectedRoute component={ChecklistTaskPage} />
+      </Route>
+      <Route path="/checklist">
+        <ProtectedRoute component={ChecklistPage} />
       </Route>
       <Route component={NotFound} />
     </Switch>

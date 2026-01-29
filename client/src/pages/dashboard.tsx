@@ -1,5 +1,6 @@
 import { useFsmaStatus } from "@/hooks/use-fsma";
 import { useRecords } from "@/hooks/use-records";
+import { useChecklistStore } from "@/hooks/use-checklist";
 import { LayoutShell } from "@/components/layout-shell";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, FileText, ArrowRight, Leaf, Droplets, Users, ClipboardList, Sparkles, SprayCan, Settings } from "lucide-react";
+import { ShieldCheck, FileText, ArrowRight, Leaf, Droplets, Users, ClipboardList, Sparkles, SprayCan, Settings, AlertTriangle, CalendarClock, CheckCircle2, Percent } from "lucide-react";
 import { Link } from "wouter";
 import { format } from "date-fns";
 import { useState, useEffect } from "react";
@@ -65,7 +66,7 @@ function HeroSection({ hasStatus }: { hasStatus: boolean }) {
           <span className="text-sm font-medium text-white/90 uppercase tracking-wide">Produce Safety Recordkeeping</span>
         </div>
         <h1 className="text-3xl md:text-4xl text-white font-serif font-bold mb-3">
-          {hasStatus ? "Welcome back to your dashboard!" : "Grow Safely, Sell Confidently"}
+          {hasStatus ? "Welcome back" : "Grow Safely, Sell Confidently"}
         </h1>
         <p className="text-lg text-white/80 max-w-2xl mb-6">
           {hasStatus 
@@ -191,6 +192,7 @@ function DashboardSettings({
 export default function Dashboard() {
   const { status, isLoading: statusLoading } = useFsmaStatus();
   const { records, isLoading: recordsLoading } = useRecords();
+  const { summary } = useChecklistStore();
   const { preferences, updatePreference, isLoaded } = useDashboardPreferences();
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -214,7 +216,7 @@ export default function Dashboard() {
       title: "Worker Training",
       description: "Log employee food safety training sessions",
       icon: Users,
-      href: "/records/training",
+      href: "/resources/training",
       gradient: "white",
       iconBg: "bg-red-200",
     },
@@ -223,7 +225,7 @@ export default function Dashboard() {
       title: "Cleaning & Sanitizing",
       description: "Track equipment and surface sanitation logs",
       icon: SprayCan,
-      href: "/records/cleaning",
+      href: "/resources/postharvest",
       gradient: "white",
       iconBg: "bg-orange-200",
     },
@@ -232,7 +234,7 @@ export default function Dashboard() {
       title: "Agricultural Water",
       description: "Record agricultural water test results",
       icon: Droplets,
-      href: "/records/water",
+      href: "/resources/water",
       gradient: "white",
       iconBg: "bg-amber-200",
     },
@@ -241,22 +243,29 @@ export default function Dashboard() {
       title: "Compost",
       description: "Track biological soil amendments and compost",
       icon: Leaf,
-      href: "/records/soil",
+      href: "/resources/soil",
       gradient: "white",
       iconBg: "bg-sky-200",
     },
     {
       key: "allRecords" as DashboardBoxKey,
-      title: "Other Records",
-      description: "View and manage all compliance records",
+      title: "Recordkeeping",
+      description: "Self-check that required records exist",
       icon: ClipboardList,
-      href: "/records/general",
+      href: "/resources/recordkeeping",
       gradient: "white",
       iconBg: "bg-green-200",
     },
   ];
 
   const visibleCards = quickActionCards.filter(card => preferences[card.key]);
+
+  const progressRows = summary
+    ? Object.entries(summary.progressByCategory).map(([category, data]) => {
+        const percent = data.total === 0 ? 0 : Math.round((data.done / data.total) * 100);
+        return { category, percent, done: data.done, total: data.total };
+      })
+    : [];
 
   return (
     <LayoutShell>
@@ -267,6 +276,78 @@ export default function Dashboard() {
 
       
         <StatusCard status={status} />
+
+        {summary && (
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            <Card className="border-rose-200 bg-rose-50/60">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold text-rose-700 flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4" />
+                  Overdue
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-3xl font-bold text-rose-700">{summary.overdueCount}</CardContent>
+            </Card>
+            <Card className="border-amber-200 bg-amber-50/60">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold text-amber-700 flex items-center gap-2">
+                  <CalendarClock className="h-4 w-4" />
+                  Due soon (14 days)
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-3xl font-bold text-amber-700">{summary.dueSoonCount}</CardContent>
+            </Card>
+            <Card className="border-emerald-200 bg-emerald-50/60">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold text-emerald-700 flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4" />
+                  Completed this month
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-3xl font-bold text-emerald-700">{summary.completedThisMonth}</CardContent>
+            </Card>
+            <Card className="border-sky-200 bg-sky-50/60">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold text-sky-700 flex items-center gap-2">
+                  <Percent className="h-4 w-4" />
+                  Avg progress
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-3xl font-bold text-sky-700">
+                {progressRows.length === 0
+                  ? "0%"
+                  : `${Math.round(progressRows.reduce((acc, row) => acc + row.percent, 0) / progressRows.length)}%`}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {summary && (
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">Progress by category</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-3 md:grid-cols-2">
+              {progressRows.map((row) => (
+                <div key={row.category} className="rounded-xl border border-muted/60 bg-white/70 p-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold">{row.category}</span>
+                    <Badge variant="secondary">{row.percent}%</Badge>
+                  </div>
+                  <div className="mt-2 text-xs text-muted-foreground">
+                    {row.done} of {row.total} tasks completed
+                  </div>
+                  <div className="mt-2 h-2 rounded-full bg-muted/50">
+                    <div
+                      className="h-2 rounded-full bg-emerald-500 transition-all"
+                      style={{ width: `${row.percent}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        )}
 
         <DashboardSettings 
           preferences={preferences}
