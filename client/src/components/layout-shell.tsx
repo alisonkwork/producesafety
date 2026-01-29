@@ -27,7 +27,7 @@ export function LayoutShell({ children }: LayoutShellProps) {
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'FSMA Wizard', href: '/onboarding', icon: FileText },
+    { name: 'FSMA Coverage Tool', href: '/onboarding', icon: FileText },
     { name: 'Worker Training', href: '/records/training', icon: UserCheck },
     { name: 'Water Records', href: '/records/water', icon: Droplets },
     { name: 'Soil Amendments', href: '/records/soil', icon: Sprout },
@@ -41,7 +41,7 @@ export function LayoutShell({ children }: LayoutShellProps) {
           <div className="p-1.5 bg-amber-400 rounded-lg">
             <Sprout className="h-5 w-5 text-emerald-900" />
           </div>
-          <span>ProduceSafe</span>
+          <span>Agrifood Safety</span>
         </Link>
       </div>
 
