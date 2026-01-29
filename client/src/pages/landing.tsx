@@ -27,7 +27,7 @@ export default function LandingPage() {
           >
             <h1 className="text-4xl lg:text-6xl font-serif font-bold text-foreground leading-tight mb-6">
               Produce Safety Recordkeeping, <br/>
-              <span className="text-primary">Simple & Organized.</span>
+              <span className="text-primary">Simplified.</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-md mb-8 leading-relaxed">
               Easily manage and organize your produce safety records, determine your coverage status, and stay FSMA compliant.

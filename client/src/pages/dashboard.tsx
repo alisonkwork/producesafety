@@ -150,7 +150,7 @@ function DashboardSettings({
   };
 
   return (
-    <div className="flex flex-col items-end gap-1">
+    <div className="flex flex-col items-start gap-1">
       <Button 
         variant="ghost" 
         size="sm" 
@@ -268,12 +268,7 @@ export default function Dashboard() {
       
         <StatusCard status={status} />
 
-        <DashboardSettings 
-          preferences={preferences}
-          updatePreference={updatePreference}
-          isOpen={settingsOpen}
-          onToggle={() => setSettingsOpen(!settingsOpen)}
-        />
+       
         
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -290,6 +285,13 @@ export default function Dashboard() {
             />
       
           ))}
+
+          <DashboardSettings 
+            preferences={preferences}
+            updatePreference={updatePreference}
+            isOpen={settingsOpen}
+            onToggle={() => setSettingsOpen(!settingsOpen)}
+          />
 
           
 
