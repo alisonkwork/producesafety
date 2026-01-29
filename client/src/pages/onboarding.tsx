@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, AlertCircle, ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
+import { CheckCircle2, AlertCircle, ArrowLeft, ArrowRight, RotateCcw, Printer } from "lucide-react";
 
 type YesNo = "yes" | "no";
 type YesNoMaybe = "yes" | "no" | "not_sure";
@@ -294,6 +294,53 @@ export default function Onboarding() {
     );
   };
 
+  const summaryCard = () => (
+    <Card className="border-dashed bg-muted/20">
+      <CardHeader>
+        <CardTitle className="text-lg">Printable summary</CardTitle>
+        <CardDescription>Inputs and outcomes for your records.</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3 text-sm text-muted-foreground">
+        <div>
+          <span className="font-semibold text-foreground">Q1:</span> {q1 === "yes" ? "Yes" : "No"}
+        </div>
+        <div>
+          <span className="font-semibold text-foreground">Q2:</span> {q2 === "yes" ? "Yes" : q2 === "no" ? "No" : "—"}
+        </div>
+        <div className="space-y-2">
+          <span className="font-semibold text-foreground">Commodities:</span>
+          {commodityOutcomes.map((commodity) => (
+            <div key={commodity.id} className="rounded-lg border border-muted/60 bg-white/60 p-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="secondary">{commodity.name}</Badge>
+                {commodity.outcome && <Badge>{OUTCOME_LABELS[commodity.outcome]}</Badge>}
+              </div>
+              <div className="mt-2 text-xs">
+                Rarely consumed raw: {commodity.rarelyConsumedRaw ?? "—"} | Personal/on-farm:{" "}
+                {commodity.personalUse ?? "—"} | Commercial processing kill step:{" "}
+                {commodity.processingKillStep ?? "—"}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div>
+          <span className="font-semibold text-foreground">Qualified exemption test:</span>{" "}
+          {q6 ? (q6 === "not_sure" ? "Not sure" : q6 === "yes" ? "Yes" : "No") : "—"}
+          {q6 === "not_sure" && provisional && <span className="ml-2 text-amber-600">(provisional)</span>}
+        </div>
+        {finalOutcome && (
+          <div>
+            <span className="font-semibold text-foreground">Outcome:</span> {OUTCOME_LABELS[finalOutcome.type]}
+          </div>
+        )}
+        <Button variant="outline" size="sm" onClick={() => window.print()}>
+          <Printer className="mr-2 h-4 w-4" />
+          Print summary
+        </Button>
+      </CardContent>
+    </Card>
+  );
+
   return (
     <LayoutShell>
       <div className="max-w-3xl mx-auto py-8 space-y-6">
@@ -525,7 +572,36 @@ export default function Onboarding() {
                   </Alert>
                 )}
 
-                <div />
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Commodity results</h3>
+                  <div className="grid gap-3">
+                    {commodityOutcomes.map((commodity) => (
+                      <Card key={commodity.id} className="border-muted/60">
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-base">{commodity.name}</CardTitle>
+                          {commodity.outcome && (
+                            <CardDescription>{OUTCOME_LABELS[commodity.outcome]}</CardDescription>
+                          )}
+                        </CardHeader>
+                        <CardContent className="text-sm text-muted-foreground">
+                          {commodity.outcomeReason ?? "No exclusion or exemption identified for this commodity."}
+                          {commodity.outcome === "eligible_exemption_processing" && (
+                            <div className="mt-3 space-y-1">
+                              <p className="font-semibold text-foreground">Documentation checklist</p>
+                              <ul className="list-disc pl-5 space-y-1">
+                                <li>Statements in documents accompanying produce</li>
+                                <li>Written assurances</li>
+                                <li>Documentation/records</li>
+                              </ul>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+
+                {summaryCard()}
               </div>
             )}
           </CardContent>
@@ -537,12 +613,10 @@ export default function Onboarding() {
                   Back
                 </Button>
               )}
-              {step !== "intro" && (
-                <Button variant="outline" onClick={resetAll}>
-                  <RotateCcw className="mr-2 h-4 w-4" />
-                  Start over
-                </Button>
-              )}
+              <Button variant="outline" onClick={resetAll}>
+                <RotateCcw className="mr-2 h-4 w-4" />
+                Start over
+              </Button>
             </div>
             {step !== "result" && step !== "not_sure_helper" && (
               <Button onClick={next} disabled={
