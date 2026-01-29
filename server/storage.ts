@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 import {
   fsmaStatus, records,
   type FsmaStatus, type InsertFsmaStatus,
@@ -43,19 +43,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getRecords(userId: string, type?: string): Promise<RecordItem[]> {
-    let query = db.select().from(records).where(eq(records.userId, userId)).orderBy(desc(records.date));
-    
     if (type) {
-      // @ts-ignore - type checking for dynamic where clause
-      query = query.where(eq(records.type, type));
+      return await db.select().from(records)
+        .where(and(eq(records.userId, userId), eq(records.type, type)))
+        .orderBy(desc(records.date));
     }
-    
-    // Filter in memory if double where is tricky with drizzle chaining
-    const results = await query;
-    if (type) {
-      return results.filter(r => r.type === type);
-    }
-    return results;
+    return await db.select().from(records)
+      .where(eq(records.userId, userId))
+      .orderBy(desc(records.date));
   }
 
   async getRecord(id: number): Promise<RecordItem | undefined> {
