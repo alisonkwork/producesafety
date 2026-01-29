@@ -63,10 +63,11 @@ export async function registerRoutes(
   app.post(api.records.create.path, isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      // Handle date coercion if needed, but zod schema handles types
-      // Front-end sends ISO strings for dates, we might need to coerce if schema expects Date object
-      // But drizzle-zod usually expects Date or string that parses to Date.
-      const input = api.records.create.input.parse(req.body);
+      const body = { ...req.body };
+      if (body.date && typeof body.date === 'string') {
+        body.date = new Date(body.date);
+      }
+      const input = api.records.create.input.parse(body);
       const record = await storage.createRecord(userId, input);
       res.status(201).json(record);
     } catch (err) {
