@@ -58,7 +58,7 @@ function Router() {
         <ProtectedRoute component={Dashboard} />
       </Route>
       <Route path="/onboarding">
-        <ProtectedRoute component={Onboarding} />
+        <Onboarding />
       </Route>
       <Route path="/resources">
         <ProtectedRoute component={ResourcesPage} />

@@ -31,8 +31,8 @@ export function LayoutShell({ children }: LayoutShellProps) {
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Checklist', href: '/checklist', icon: ListChecks },
-    { name: 'FSMA Coverage Tool', href: '/onboarding', icon: FileText },
+    { name: 'Produce Safety Checklist', href: '/checklist', icon: ListChecks },
+    { name: 'Coverage Checker', href: '/onboarding', icon: FileText },
     { name: 'Resources', href: '/resources', icon: Library },
     { name: 'Worker Training', href: '/resources/training', icon: UserCheck, sub: true },
     { name: 'Agricultural Water', href: '/resources/water', icon: Droplets, sub: true },

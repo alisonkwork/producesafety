@@ -133,7 +133,7 @@ export default function ChecklistPage() {
               <ShieldCheck className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-3xl font-serif font-bold text-foreground">FSMA Compliance Checklist</h1>
+              <h1 className="text-3xl font-serif font-bold text-foreground">Produce Safety Checklist</h1>
               <p className="text-muted-foreground">
                 Track routine tasks by category and frequency. All data stays in your browser.
               </p>
