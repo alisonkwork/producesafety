@@ -62,14 +62,14 @@ function HeroSection({ hasStatus }: { hasStatus: boolean }) {
       <div className="relative z-10">
         <div className="flex items-center gap-2 mb-4">
           <Sparkles className="h-5 w-5 text-yellow-300" />
-          <span className="text-sm font-medium text-white/90 uppercase tracking-wide">ProduceSafe Dashboard</span>
+          <span className="text-sm font-medium text-white/90 uppercase tracking-wide">Produce Safety Recordkeeping</span>
         </div>
         <h1 className="text-3xl md:text-4xl text-white font-serif font-bold mb-3">
-          {hasStatus ? "Welcome Back to Your Farm" : "Grow Safely, Sell Confidently"}
+          {hasStatus ? "Welcome back to your dashboard!" : "Grow Safely, Sell Confidently"}
         </h1>
         <p className="text-lg text-white/80 max-w-2xl mb-6">
           {hasStatus 
-            ? "Your food safety compliance hub. Track records, manage training, and stay on top of regulations."
+            ? "Organize your farm's produce safety records and stay on top of FSMA Produce Safety Rule and GAPs requirements."
             : "Simplify FSMA compliance with smart record-keeping and exemption tracking designed for real farmers."}
         </p>
         {!hasStatus && (
@@ -93,7 +93,8 @@ function QuickActionCard({
   icon: Icon, 
   href, 
   gradient,
-  iconBg
+  iconBg,
+  isDark
 }: { 
   title: string; 
   description: string; 
@@ -101,23 +102,26 @@ function QuickActionCard({
   href: string;
   gradient: string;
   iconBg: string;
+  isDark?: boolean;
 }) {
   return (
     <Link href={href}>
-      <Card className={`${gradient} text-white border border-transparent shadow-sm hover:shadow-lg transition-all hover:border-emerald-400 cursor-pointer h-full`}>
+      <Card className={`${gradient} ${isDark ? 'text-white' : 'text-stone-600'} border shadow-sm hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer h-full`}>
         <CardHeader className="pb-2">
           <div className="flex items-center gap-3">
-            <div className={`${iconBg} p-2 rounded-lg`}>
-              <Icon className="h-6 w-6" />
+            <div className={`p-2 ${iconBg} rounded-lg`}>
+              <Icon className={`h-6 w-6 ${isDark ? 'text-white' : ''}`} />
             </div>
-            <CardTitle className="text-lg font-bold text-stone-600">{title}</CardTitle>
+            <CardTitle className={`text-lg font-bold ${isDark ? 'text-white' : 'text-stone-600'}`}>{title}</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-stone-400 text-sm">{description}</p>
+          <p className={`${isDark ? 'text-white/90' : 'text-stone-400'} text-sm`}>{description}</p>
         </CardContent>
         <CardFooter>
-          
+          <Button variant="ghost" className={`${isDark ? 'text-white hover:bg-white/20' : ''} p-0`}>
+            Get Started <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </CardFooter>
       </Card>
     </Link>
@@ -148,7 +152,7 @@ function DashboardSettings({
   };
 
   return (
-    <div className="flex flex-col items-end gap-2">
+    <div className="flex flex-col items-end gap-1">
       <Button 
         variant="ghost" 
         size="sm" 
@@ -156,7 +160,7 @@ function DashboardSettings({
         className="text-muted-foreground hover:text-foreground"
         data-testid="button-dashboard-settings"
       >
-        <Settings className="h-4 w-4 mr-2" />
+        <Settings className="h-0 w-2 mr-0" />
         Customize Dashboard
       </Button>
       
@@ -249,8 +253,8 @@ export default function Dashboard() {
       description: "View and manage all compliance records",
       icon: ClipboardList,
       href: "/records/general",
-      gradient: "white",
-      iconBg: "bg-fuchsia-200",
+      gradient: "bg-emerald-900 text-white shadow-lg",
+      iconBg: "bg-emerald-800",
     },
   ];
 
@@ -263,13 +267,15 @@ export default function Dashboard() {
 
         
 
+      
+        <StatusCard status={status} />
+
         <DashboardSettings 
           preferences={preferences}
           updatePreference={updatePreference}
           isOpen={settingsOpen}
           onToggle={() => setSettingsOpen(!settingsOpen)}
         />
-
         
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -282,11 +288,14 @@ export default function Dashboard() {
               href={card.href}
               gradient={card.gradient}
               iconBg={card.iconBg}
+              isDark={card.key === "allRecords"}
             />
       
           ))}
 
-          <StatusCard status={status} />
+          
+
+          
           
         </div>
 
@@ -302,19 +311,19 @@ function StatusCard({ status }: { status: any }) {
       <Card className="border-2 border-dashed border-orange-300 bg-orange-50/50 dark:bg-orange-950/20">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between gap-2">
-            <CardTitle className="text-lg font-bold text-orange-800 dark:text-orange-200">FSMA Status</CardTitle>
+            <CardTitle className="text-lg font-bold text-orange-800 dark:text-orange-200">FSMA Coverage Status</CardTitle>
             <ShieldCheck className="h-6 w-6 text-orange-500" />
           </div>
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-serif font-bold mb-2 text-orange-700 dark:text-orange-300">Not Yet Determined</div>
           <p className="text-sm text-orange-600/80 dark:text-orange-400/80">
-            Take our quick wizard to find out if you're exempt.
+            Use this tool to find out if you're qualified exempt.
           </p>
         </CardContent>
         <CardFooter className="pt-2">
           <Link href="/onboarding">
-            <Button className="bg-orange-500 hover:bg-orange-600 text-white">Start Wizard</Button>
+            <Button className="bg-orange-500 hover:bg-orange-600 text-white">Find out your coverage status</Button>
           </Link>
         </CardFooter>
       </Card>
@@ -333,7 +342,7 @@ function StatusCard({ status }: { status: any }) {
 
   const style = getStatusStyle();
   const statusTitle = status.isExempt 
-    ? (status.exemptionType === "qualified" ? "Qualified Exempt" : "Exempt") 
+    ? (status.exemptionType === "qualified" ? "Qualified Exempt" : "Qualified Exempt") 
     : "Covered";
 
   return (
@@ -350,9 +359,9 @@ function StatusCard({ status }: { status: any }) {
           Based on <strong>{status.annualSales}</strong> in annual sales.
         </p>
       </CardContent>
-      <CardFooter className="pt-2">
+      <CardFooter className="pt-0">
         <Link href="/onboarding">
-          <Button variant="ghost" size="sm" className={style.text}>Update Status</Button>
+          <Button variant="ghost" size="sm" className={`bg-emerald-500 text-white style.text`}>Try the tool again</Button>
         </Link>
       </CardFooter>
     </Card>

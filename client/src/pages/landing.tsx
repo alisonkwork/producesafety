@@ -17,7 +17,7 @@ export default function LandingPage() {
             <div className="bg-primary/10 p-2 rounded-lg">
               <Leaf className="h-6 w-6 text-primary" />
             </div>
-            <span className="text-xl font-serif font-bold text-foreground tracking-tight">ProduceSafe</span>
+            <span className="text-xl font-serif font-bold text-foreground tracking-tight">Agrifood Safety</span>
           </div>
 
           <motion.div 
@@ -26,11 +26,11 @@ export default function LandingPage() {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl lg:text-6xl font-serif font-bold text-foreground leading-tight mb-6">
-              FSMA Compliance, <br/>
-              <span className="text-primary">Simplified.</span>
+              Produce Safety Recordkeeping, <br/>
+              <span className="text-primary">Simple & Organized.</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-md mb-8 leading-relaxed">
-              Navigate the Produce Safety Rule with confidence. Manage records, determine exemptions, and ensure food safety compliance all in one place.
+              Easily manage and organize your produce safety records, determine your coverage status, and stay FSMA compliant.
             </p>
           </motion.div>
 
@@ -42,19 +42,19 @@ export default function LandingPage() {
           >
             <div className="p-4 rounded-xl bg-white/60 border border-green-100 shadow-sm">
               <ShieldCheck className="h-8 w-8 text-primary mb-3" />
-              <h3 className="font-semibold text-foreground mb-1">Exemption Wizard</h3>
-              <p className="text-sm text-muted-foreground">Instantly determine your FSMA coverage status.</p>
+              <h3 className="font-semibold text-foreground mb-1">Determine your FSMA Coverage Status</h3>
+              <p className="text-sm text-muted-foreground">Quickly figure out what records your farm needs to keep under the FSMA Produce Safety Rule.</p>
             </div>
             <div className="p-4 rounded-xl bg-white/60 border border-green-100 shadow-sm">
               <FileCheck className="h-8 w-8 text-primary mb-3" />
-              <h3 className="font-semibold text-foreground mb-1">Digital Records</h3>
-              <p className="text-sm text-muted-foreground">Keep training, water, and soil records organized.</p>
+              <h3 className="font-semibold text-foreground mb-1">Organize Digital Records</h3>
+              <p className="text-sm text-muted-foreground">Keep all your produce safety records organized and accessible in one place.</p>
             </div>
           </motion.div>
         </div>
 
         <div className="relative z-10 mt-12 text-sm text-muted-foreground font-medium">
-          &copy; {new Date().getFullYear()} ProduceSafe Compliance Tools
+          &copy; {new Date().getFullYear()} Agrifood Safety
         </div>
       </div>
 
