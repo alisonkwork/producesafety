@@ -26,8 +26,8 @@ export function LayoutShell({ children }: LayoutShellProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, highlight: 'amber' as const },
-    { name: 'FSMA Coverage Tool', href: '/onboarding', icon: FileText, highlight: 'orange' as const },
+    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { name: 'FSMA Coverage Tool', href: '/onboarding', icon: FileText },
     { name: 'Worker Training', href: '/records/training', icon: UserCheck },
     { name: 'Water Records', href: '/records/water', icon: Droplets },
     { name: 'Soil Amendments', href: '/records/soil', icon: Sprout },
@@ -48,16 +48,6 @@ export function LayoutShell({ children }: LayoutShellProps) {
       <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
         {navigation.map((item) => {
           const isActive = location === item.href || (location.startsWith(item.href) && item.href !== '/dashboard');
-          const highlightColor = item.highlight === 'amber' 
-            ? 'bg-amber-500/20 border border-amber-400/30' 
-            : item.highlight === 'orange' 
-              ? 'bg-orange-500/20 border border-orange-400/30' 
-              : '';
-          const iconHighlight = item.highlight === 'amber' 
-            ? 'text-amber-400' 
-            : item.highlight === 'orange' 
-              ? 'text-orange-400' 
-              : 'text-white/60 group-hover:text-amber-400';
           return (
             <Link key={item.name} href={item.href}>
               <div
@@ -65,13 +55,11 @@ export function LayoutShell({ children }: LayoutShellProps) {
                   "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 group cursor-pointer",
                   isActive
                     ? "bg-white/20 text-white shadow-md"
-                    : item.highlight 
-                      ? `${highlightColor} text-white hover:bg-white/10`
-                      : "text-white/70 hover:bg-white/10 hover:text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
                 )}
                 onClick={() => setIsMobileOpen(false)}
               >
-                <item.icon className={cn("h-5 w-5", isActive ? "text-amber-400" : iconHighlight)} />
+                <item.icon className={cn("h-5 w-5", isActive ? "text-amber-400" : "text-white/60 group-hover:text-amber-400")} />
                 {item.name}
               </div>
             </Link>
