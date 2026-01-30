@@ -61,7 +61,9 @@ function QuickActionCard({
 }) {
   return (
     <Link href={href}>
-      <Card className={`${gradient} ${isDark ? 'text-white' : 'text-stone-600'} hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer h-full`}>
+      <Card
+        className={`${gradient} ${isDark ? 'text-white' : 'text-stone-600'} border border-slate-200 hover:border-emerald-500 hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer h-full`}
+      >
         <CardHeader className="pb-2">
           <div className="flex items-center gap-3">
             <div className={`p-2 ${iconBg} rounded-lg white`}>
@@ -130,7 +132,7 @@ export default function Dashboard() {
       iconBg: "bg-amber-200",
     },
     {
-      title: "Compost",
+      title: "Soil Amendments",
       description: "Track biological soil amendments and compost",
       icon: Leaf,
       href: "/resources/soil",
@@ -145,6 +147,14 @@ export default function Dashboard() {
       gradient: "white",
       iconBg: "bg-green-200",
     },
+    {
+      title: "Wildlife & Domesticated Animals",
+      description: "Document monitoring and risk assessments for animal activity",
+      icon: FileText,
+      href: "/resources/wildlife",
+      gradient: "white",
+      iconBg: "bg-emerald-200",
+    },
   ];
 
   const visibleCards = quickActionCards;
@@ -157,39 +167,55 @@ export default function Dashboard() {
         
 
       
-        <StatusCard status={status} />
+        <div className="grid items-stretch gap-6 lg:auto-rows-fr lg:grid-cols-[2fr_1fr]">
+          {summary && (
+            <Card className="rounded-2xl border border-slate-200/70 bg-white">
+              <CardHeader className="pb-3 pt-4">
+                <CardTitle className="text-2xl font-serif font-bold text-foreground">Task overview</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0 pb-4 space-y-6">
+                <div className="grid gap-4 lg:grid-cols-3">
+                  <Card className="border-rose-200 bg-rose-50/60">
+                    <CardContent className="flex items-center justify-between gap-4 p-4">
+                      <div className="flex items-center gap-2">
+                        <AlertTriangle className="h-4 w-4 text-rose-700" />
+                        <span className="text-sm font-semibold text-rose-700">Overdue</span>
+                      </div>
+                      <span className="text-2xl font-bold text-rose-700">{summary.overdueCount}</span>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-amber-200 bg-amber-50/60">
+                    <CardContent className="flex items-center justify-between gap-4 p-4">
+                      <div className="flex items-center gap-2">
+                        <CalendarClock className="h-4 w-4 text-amber-700" />
+                        <span className="text-sm font-semibold text-amber-700">Due soon (14 days)</span>
+                      </div>
+                      <span className="text-2xl font-bold text-amber-700">{summary.dueSoonCount}</span>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-emerald-200 bg-emerald-50/60">
+                    <CardContent className="flex items-center justify-between gap-4 p-4">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-700" />
+                        <span className="text-sm font-semibold text-emerald-700">Completed this month</span>
+                      </div>
+                      <span className="text-2xl font-bold text-emerald-700">{summary.completedThisMonth}</span>
+                    </CardContent>
+                  </Card>
+                </div>
+                <Link href="/checklist">
+                  <Button variant="ghost" size="sm" className="mt-8 bg-emerald-500 text-white">
+                    Go to task list
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          )}
 
-        {summary && (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            <Card className="border-rose-200 bg-rose-50/60">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold text-rose-700 flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4" />
-                  Overdue
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-3xl font-bold text-rose-700">{summary.overdueCount}</CardContent>
-            </Card>
-            <Card className="border-amber-200 bg-amber-50/60">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold text-amber-700 flex items-center gap-2">
-                  <CalendarClock className="h-4 w-4" />
-                  Due soon (14 days)
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-3xl font-bold text-amber-700">{summary.dueSoonCount}</CardContent>
-            </Card>
-            <Card className="border-emerald-200 bg-emerald-50/60">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold text-emerald-700 flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4" />
-                  Completed this month
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-3xl font-bold text-emerald-700">{summary.completedThisMonth}</CardContent>
-            </Card>
+          <div className="lg:max-w-sm h-full">
+            <StatusCard status={status} />
           </div>
-        )}
+        </div>
 
        
         
@@ -226,7 +252,7 @@ export default function Dashboard() {
 function StatusCard({ status }: { status: any }) {
   if (!status) {
     return (
-      <Card className="border border-dashed border-orange-200 bg-orange-50/70 dark:bg-orange-950/20">
+      <Card className="h-full border border-dashed border-orange-200 bg-orange-50/70 dark:bg-orange-950/20">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between gap-2">
             <CardTitle className="text-lg font-bold text-orange-800 dark:text-orange-200">FSMA Coverage Status</CardTitle>
@@ -264,7 +290,7 @@ function StatusCard({ status }: { status: any }) {
     : "Covered";
 
   return (
-    <Card className={`border ${style.border} ${style.bg}`}>
+    <Card className={`h-full border ${style.border} ${style.bg}`}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between gap-2">
           <CardTitle className={`text-lg font-bold ${style.text}`}>FSMA Status</CardTitle>

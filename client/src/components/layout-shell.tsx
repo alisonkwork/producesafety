@@ -55,7 +55,7 @@ export function LayoutShell({ children }: LayoutShellProps) {
 
   const NavContent = () => (
     <div className="flex flex-col h-full bg-gradient-to-b from-[#0a4d4f] to-[#0a4d4f] text-white">
-      <div className="p-6 border-b border-white/10">
+      <div className="p-6">
         <Link href="/dashboard" className="flex items-center gap-2 font-serif text-xl font-bold text-white">
           <div className="p-1.5 bg-amber-400 rounded-lg">
             <Sprout className="h-5 w-5 text-emerald-900" />
@@ -161,7 +161,7 @@ export function LayoutShell({ children }: LayoutShellProps) {
         })}
       </div>
 
-      <div className="p-4 border-t border-white/10 bg-black/20">
+      <div className="p-4 bg-black/20">
         <div className="flex items-center gap-3 mb-4 px-2">
           <div className="h-8 w-8 rounded-full bg-amber-400 text-emerald-900 flex items-center justify-center font-bold text-sm">
             {user?.firstName?.[0] || user?.email?.[0] || "U"}

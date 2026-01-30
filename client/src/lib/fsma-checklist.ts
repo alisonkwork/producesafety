@@ -33,7 +33,7 @@ export interface ChecklistStore {
   completionHistory: Record<string, string[]>;
 }
 
-export const CHECKLIST_STORAGE_KEY = "fsmaChecklistStore_v1";
+export const CHECKLIST_STORAGE_KEY = "fsmaChecklistStore_v2";
 
 const CATEGORY_ORDER: TaskCategory[] = [
   "Worker Training & Hygiene",

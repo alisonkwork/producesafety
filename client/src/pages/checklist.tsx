@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -77,12 +78,13 @@ function groupByCategory(tasks: Task[]) {
 
 export default function ChecklistPage() {
   const { tasks, completeTask, uncompleteTask, updateTaskFields, deleteTask, resetStore, addTask } = useChecklistStore();
-  const [activeTab, setActiveTab] = useState<FrequencyTab>("annual");
+  const [activeTab, setActiveTab] = useState<FrequencyTab>("all");
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [frequencyFilter, setFrequencyFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newCategory, setNewCategory] = useState<TaskCategory | "">("");
@@ -90,6 +92,11 @@ export default function ChecklistPage() {
   const [newNotes, setNewNotes] = useState("");
 
   const categories = useMemo(() => getCategoryOrder(), []);
+  const hasActiveFilters =
+    search.trim() !== "" ||
+    categoryFilter !== "all" ||
+    frequencyFilter !== "all" ||
+    statusFilter !== "all";
 
   const filteredTasks = useMemo(() => {
     let filtered = tasks;
@@ -149,86 +156,127 @@ export default function ChecklistPage() {
           </AlertDescription>
         </Alert>
 
-        <Card>
-          <CardContent className="pt-5">
-            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-              <div className="space-y-2">
-                <label className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Search</label>
-                <Input
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Search tasks..."
-                  className="h-8 text-sm"
-                />
+        <div className="flex items-center justify-between">
+          <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="relative gap-2">
+                <Filter className="h-4 w-4" />
+                Filters
+                {hasActiveFilters && (
+                  <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-[min(90vw,520px)] p-4">
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Search</label>
+                  <Input
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder="Search tasks..."
+                    className="h-8 text-sm"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Category</label>
+                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue placeholder="All categories" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All categories</SelectItem>
+                      {categories.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Frequency</label>
+                  <Select value={frequencyFilter} onValueChange={setFrequencyFilter}>
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue placeholder="All frequencies" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All frequencies</SelectItem>
+                      {Object.entries(FREQUENCY_LABELS).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Status</label>
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue placeholder="All statuses" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All statuses</SelectItem>
+                      {Object.entries(STATUS_LABELS).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Category</label>
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                  <SelectTrigger className="h-8 text-xs">
-                    <SelectValue placeholder="All categories" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All categories</SelectItem>
-                    {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Frequency</label>
-                <Select value={frequencyFilter} onValueChange={setFrequencyFilter}>
-                  <SelectTrigger className="h-8 text-xs">
-                    <SelectValue placeholder="All frequencies" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All frequencies</SelectItem>
-                    {Object.entries(FREQUENCY_LABELS).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Status</label>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="h-8 text-xs">
-                    <SelectValue placeholder="All statuses" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All statuses</SelectItem>
-                    {Object.entries(STATUS_LABELS).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </PopoverContent>
+          </Popover>
+        </div>
 
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as FrequencyTab)}>
             <TabsList className="flex flex-wrap h-auto gap-1.5 bg-muted/40 px-2 py-1">
-              <TabsTrigger value="annual" className="text-xs px-2.5 py-1">Yearly</TabsTrigger>
-              <TabsTrigger value="monthly" className="text-xs px-2.5 py-1">Monthly</TabsTrigger>
-              <TabsTrigger value="weekly" className="text-xs px-2.5 py-1">Weekly</TabsTrigger>
-              <TabsTrigger value="per-event" className="text-xs px-2.5 py-1">Per-Event</TabsTrigger>
-              <TabsTrigger value="ongoing" className="text-xs px-2.5 py-1">Ongoing</TabsTrigger>
-              <TabsTrigger value="all" className="text-xs px-2.5 py-1">All</TabsTrigger>
+              <TabsTrigger
+                value="all"
+                className="text-xs px-2.5 py-1 hover:bg-emerald-500/20 data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
+              >
+                All
+              </TabsTrigger>
+              <TabsTrigger
+                value="annual"
+                className="text-xs px-2.5 py-1 hover:bg-emerald-500/20 data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
+              >
+                Yearly
+              </TabsTrigger>
+              <TabsTrigger
+                value="monthly"
+                className="text-xs px-2.5 py-1 hover:bg-emerald-500/20 data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
+              >
+                Monthly
+              </TabsTrigger>
+              <TabsTrigger
+                value="weekly"
+                className="text-xs px-2.5 py-1 hover:bg-emerald-500/20 data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
+              >
+                Weekly
+              </TabsTrigger>
+              <TabsTrigger
+                value="per-event"
+                className="text-xs px-2.5 py-1 hover:bg-emerald-500/20 data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
+              >
+                Per-Event
+              </TabsTrigger>
+              <TabsTrigger
+                value="ongoing"
+                className="text-xs px-2.5 py-1 hover:bg-emerald-500/20 data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
+              >
+                Ongoing
+              </TabsTrigger>
             </TabsList>
           </Tabs>
 
           <div className="flex flex-wrap gap-2">
             <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
               <DialogTrigger asChild>
-                <Button size="sm" className="bg-amber-400 text-emerald-950 hover:bg-amber-300">
+                <Button size="sm" className="border-0 bg-amber-300 text-emerald-950 hover:bg-amber-200">
                   Add custom task
                 </Button>
               </DialogTrigger>
@@ -287,6 +335,7 @@ export default function ChecklistPage() {
                 </div>
                 <DialogFooter>
                   <Button
+                    size="sm"
                     onClick={() => {
                       if (!newTitle.trim() || !newCategory || !newFrequency) return;
                       addTask({
@@ -310,7 +359,6 @@ export default function ChecklistPage() {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
@@ -325,10 +373,10 @@ export default function ChecklistPage() {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel className="h-8 px-3 text-xs">Cancel</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => resetStore()}
-                    className="bg-destructive hover:bg-destructive/90"
+                    className="h-8 bg-destructive px-3 text-xs hover:bg-destructive/90"
                   >
                     Reset data
                   </AlertDialogAction>
@@ -422,10 +470,10 @@ export default function ChecklistPage() {
                                         </AlertDialogDescription>
                                       </AlertDialogHeader>
                                       <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogCancel className="h-8 px-3 text-xs">Cancel</AlertDialogCancel>
                                         <AlertDialogAction
                                           onClick={() => deleteTask(task.id)}
-                                          className="bg-destructive hover:bg-destructive/90"
+                                          className="h-8 bg-destructive px-3 text-xs hover:bg-destructive/90"
                                         >
                                           Delete task
                                         </AlertDialogAction>
