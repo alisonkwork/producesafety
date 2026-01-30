@@ -5,56 +5,10 @@ import { LayoutShell } from "@/components/layout-shell";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { ShieldCheck, FileText, ArrowRight, Leaf, Droplets, Users, ClipboardList, Sparkles, SprayCan, Settings, AlertTriangle, CalendarClock, CheckCircle2, Percent } from "lucide-react";
+import { ShieldCheck, FileText, ArrowRight, Leaf, Droplets, Users, ClipboardList, Sparkles, SprayCan, AlertTriangle, CalendarClock, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
 import { format } from "date-fns";
-import { useState, useEffect } from "react";
 
-type DashboardBoxKey = "workerTraining" | "cleaningSanitizing" | "agriculturalWater" | "compost" | "allRecords";
-
-interface DashboardPreferences {
-  workerTraining: boolean;
-  cleaningSanitizing: boolean;
-  agriculturalWater: boolean;
-  compost: boolean;
-  allRecords: boolean;
-}
-
-const DEFAULT_PREFERENCES: DashboardPreferences = {
-  workerTraining: true,
-  cleaningSanitizing: true,
-  agriculturalWater: true,
-  compost: true,
-  allRecords: true,
-};
-
-function useDashboardPreferences() {
-  const [preferences, setPreferences] = useState<DashboardPreferences>(DEFAULT_PREFERENCES);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("dashboardPreferences");
-    if (saved) {
-      try {
-        setPreferences({ ...DEFAULT_PREFERENCES, ...JSON.parse(saved) });
-      } catch {
-        setPreferences(DEFAULT_PREFERENCES);
-      }
-    }
-    setIsLoaded(true);
-  }, []);
-
-  const updatePreference = (key: DashboardBoxKey, value: boolean) => {
-    const newPreferences = { ...preferences, [key]: value };
-    setPreferences(newPreferences);
-    localStorage.setItem("dashboardPreferences", JSON.stringify(newPreferences));
-  };
-
-  return { preferences, updatePreference, isLoaded };
-}
 
 function HeroSection({ hasStatus }: { hasStatus: boolean }) {
   return (
@@ -131,72 +85,12 @@ function QuickActionCard({
 
 
 
-function DashboardSettings({ 
-  preferences, 
-  updatePreference,
-  isOpen,
-  onToggle
-}: { 
-  preferences: DashboardPreferences;
-  updatePreference: (key: DashboardBoxKey, value: boolean) => void;
-  isOpen: boolean;
-  onToggle: () => void;
-}) {
-  const boxLabels: Record<DashboardBoxKey, string> = {
-    workerTraining: "Worker Training",
-    cleaningSanitizing: "Cleaning & Sanitizing",
-    agriculturalWater: "Agricultural Water",
-    compost: "Compost",
-    allRecords: "All Records",
-  };
-
-  return (
-    <div className="flex flex-col items-start gap-1">
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        onClick={onToggle}
-        className="text-muted-foreground hover:text-foreground"
-        data-testid="button-dashboard-settings"
-      >
-        <Settings className="h-0 w-2 mr-0" />
-        Customize Dashboard
-      </Button>
-      
-      {isOpen && (
-        <Card className="w-full max-w-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Show/Hide Boxes</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {(Object.keys(boxLabels) as DashboardBoxKey[]).map((key) => (
-              <div key={key} className="flex items-center justify-between">
-                <Label htmlFor={`toggle-${key}`} className="text-sm">
-                  {boxLabels[key]}
-                </Label>
-                <Switch
-                  id={`toggle-${key}`}
-                  checked={preferences[key]}
-                  onCheckedChange={(checked) => updatePreference(key, checked)}
-                  data-testid={`switch-${key}`}
-                />
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      )}
-    </div>
-  );
-}
-
 export default function Dashboard() {
   const { status, isLoading: statusLoading } = useFsmaStatus();
   const { records, isLoading: recordsLoading } = useRecords();
   const { summary } = useChecklistStore();
-  const { preferences, updatePreference, isLoaded } = useDashboardPreferences();
-  const [settingsOpen, setSettingsOpen] = useState(false);
 
-  if (statusLoading || recordsLoading || !isLoaded) {
+  if (statusLoading || recordsLoading) {
     return (
       <LayoutShell>
         <div className="space-y-6">
@@ -212,7 +106,6 @@ export default function Dashboard() {
 
   const quickActionCards = [
     {
-      key: "workerTraining" as DashboardBoxKey,
       title: "Worker Training",
       description: "Log employee food safety training sessions",
       icon: Users,
@@ -221,7 +114,6 @@ export default function Dashboard() {
       iconBg: "bg-red-200",
     },
     {
-      key: "cleaningSanitizing" as DashboardBoxKey,
       title: "Cleaning & Sanitizing",
       description: "Track equipment and surface sanitation logs",
       icon: SprayCan,
@@ -230,7 +122,6 @@ export default function Dashboard() {
       iconBg: "bg-orange-200",
     },
     {
-      key: "agriculturalWater" as DashboardBoxKey,
       title: "Agricultural Water",
       description: "Record agricultural water test results",
       icon: Droplets,
@@ -239,7 +130,6 @@ export default function Dashboard() {
       iconBg: "bg-amber-200",
     },
     {
-      key: "compost" as DashboardBoxKey,
       title: "Compost",
       description: "Track biological soil amendments and compost",
       icon: Leaf,
@@ -248,7 +138,6 @@ export default function Dashboard() {
       iconBg: "bg-sky-200",
     },
     {
-      key: "allRecords" as DashboardBoxKey,
       title: "Recordkeeping",
       description: "Self-check that required records exist",
       icon: ClipboardList,
@@ -258,14 +147,7 @@ export default function Dashboard() {
     },
   ];
 
-  const visibleCards = quickActionCards.filter(card => preferences[card.key]);
-
-  const progressRows = summary
-    ? Object.entries(summary.progressByCategory).map(([category, data]) => {
-        const percent = data.total === 0 ? 0 : Math.round((data.done / data.total) * 100);
-        return { category, percent, done: data.done, total: data.total };
-      })
-    : [];
+  const visibleCards = quickActionCards;
 
   return (
     <LayoutShell>
@@ -306,55 +188,8 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent className="text-3xl font-bold text-emerald-700">{summary.completedThisMonth}</CardContent>
             </Card>
-            <Card className="border-sky-200 bg-sky-50/60">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold text-sky-700 flex items-center gap-2">
-                  <Percent className="h-4 w-4" />
-                  Avg progress
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-3xl font-bold text-sky-700">
-                {progressRows.length === 0
-                  ? "0%"
-                  : `${Math.round(progressRows.reduce((acc, row) => acc + row.percent, 0) / progressRows.length)}%`}
-              </CardContent>
-            </Card>
           </div>
         )}
-
-        {summary && (
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Progress by category</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-3 md:grid-cols-2">
-              {progressRows.map((row) => (
-                <div key={row.category} className="rounded-xl border border-muted/60 bg-white/70 p-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold">{row.category}</span>
-                    <Badge variant="secondary">{row.percent}%</Badge>
-                  </div>
-                  <div className="mt-2 text-xs text-muted-foreground">
-                    {row.done} of {row.total} tasks completed
-                  </div>
-                  <div className="mt-2 h-2 rounded-full bg-muted/50">
-                    <div
-                      className="h-2 rounded-full bg-emerald-500 transition-all"
-                      style={{ width: `${row.percent}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        )}
-
-        <DashboardSettings 
-          preferences={preferences}
-          updatePreference={updatePreference}
-          isOpen={settingsOpen}
-          onToggle={() => setSettingsOpen(!settingsOpen)}
-        />
 
        
         

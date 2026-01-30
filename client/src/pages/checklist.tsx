@@ -342,7 +342,7 @@ export default function ChecklistPage() {
           {(["annual", "monthly", "weekly", "per-event", "ongoing", "all"] as FrequencyTab[]).map((tab) => (
             <TabsContent key={tab} value={tab} className="space-y-6">
               {filteredTasks.length === 0 ? (
-                <Card className="bg-muted/40 border-dashed">
+                <Card className="bg-muted/40 border-border border-dashed">
                   <CardContent className="py-12 text-center text-muted-foreground">
                     <Filter className="mx-auto mb-3 h-6 w-6" />
                     <p className="text-lg font-medium">No matching tasks</p>
@@ -354,7 +354,7 @@ export default function ChecklistPage() {
                   const categoryTasks = groupedTasks.get(category) ?? [];
                   if (categoryTasks.length === 0) return null;
                   return (
-                    <Card key={category} className="border-muted/60">
+                    <Card key={category} className="border-border">
                       <CardHeader className="pb-2">
                         <CardTitle className="text-lg">{category}</CardTitle>
                       </CardHeader>
@@ -362,7 +362,7 @@ export default function ChecklistPage() {
                         {categoryTasks.map((task) => (
                           <div
                             key={task.id}
-                            className="flex flex-col gap-3 rounded-xl border border-muted/60 bg-white/70 p-4 shadow-sm"
+                            className="flex flex-col gap-3 rounded-xl border border-border bg-white/70 p-4 shadow-sm"
                           >
                             <div className="flex items-start justify-between gap-4">
                               <div className="flex items-start gap-3">
