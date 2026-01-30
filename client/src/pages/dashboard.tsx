@@ -190,7 +190,7 @@ export default function Dashboard() {
         <div className="space-y-6">
           {summary && (
             <div className="-mx-4 md:-mx-8 lg:-mx-12">
-              <Card className="relative my-0 w-full overflow-hidden rounded-none border-0 bg-lime-100 pb-0 pt-12 shadow-none md:my-0 md:pb-0 md:pt-14 lg:pb-0 lg:pt-14">
+              <Card className="relative my-0 w-full overflow-hidden rounded-none border-0 bg-lime-100 pb-0 pt-8 shadow-none md:my-0 md:pb-0 md:pt-10 lg:pb-0 lg:pt-10">
                 <svg
                   className="pointer-events-none absolute left-0 top-0 h-10 w-full fill-[hsl(var(--background))]"
                   viewBox="0 0 1440 80"
