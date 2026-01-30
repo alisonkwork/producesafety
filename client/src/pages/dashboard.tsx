@@ -12,15 +12,7 @@ import { format } from "date-fns";
 
 type StatusStyle = { bg: string; border: string; text: string };
 
-function HeroSection({
-  hasStatus,
-  ongoingPreview,
-  reminderStyle,
-}: {
-  hasStatus: boolean;
-  ongoingPreview: Task[];
-  reminderStyle: StatusStyle;
-}) {
+function HeroSection({ hasStatus }: { hasStatus: boolean }) {
   return (
     <div className="relative overflow-hidden rounded-2xl bg-transparent text-[#0a4d4f] p-0 md:p-0">
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')] opacity-30"></div>
@@ -37,27 +29,6 @@ function HeroSection({
             ? "Reduce produce safety risks on the farm one step at a time."
             : "Stay organized and on track with your produce safety tasks."}
         </p>
-        <div className="mt-6 -mx-4 md:-mx-8 lg:-mx-12">
-          <Card className={`w-full rounded-none ${reminderStyle.border} ${reminderStyle.bg}`}>
-            <CardContent className="px-4 py-4 text-left md:px-8 lg:px-12">
-              <div className="flex flex-wrap items-center gap-3">
-                <Carrot className={`h-6 w-6 ${reminderStyle.text}`} />
-                <span className={`text-base font-serif font-bold ${reminderStyle.text}`}>
-                  Daily Produce Safety Reminder
-                </span>
-                <div className={`min-w-0 flex-1 text-base ${reminderStyle.text}`}>
-                  {ongoingPreview.length > 0 ? (
-                    <span className="line-clamp-1">
-                      {ongoingPreview.map((task) => task.title).join(" • ")}
-                    </span>
-                  ) : (
-                    <span className="opacity-80">No ongoing tasks yet.</span>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
         {!hasStatus && (
           <Link href="/onboarding">
             <Button size="lg" className="bg-white text-emerald-700 hover:bg-white/90 font-semibold shadow-lg">
@@ -126,7 +97,7 @@ export default function Dashboard() {
   if (statusLoading || recordsLoading) {
     return (
       <LayoutShell>
-        <div className="space-y-6">
+        <div className="space-y-0">
           <Skeleton className="h-48 rounded-2xl" />
           <Skeleton className="h-32 rounded-xl" />
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -211,7 +182,7 @@ export default function Dashboard() {
   return (
     <LayoutShell>
       <div className="space-y-8">
-        <HeroSection hasStatus={!!status} ongoingPreview={ongoingPreview} reminderStyle={reminderStyle} />
+        <HeroSection hasStatus={!!status} />
 
         
 
@@ -219,7 +190,7 @@ export default function Dashboard() {
         <div className="space-y-6">
           {summary && (
             <div className="-mx-4 md:-mx-8 lg:-mx-12">
-              <Card className="relative my-6 w-full overflow-hidden rounded-none border-0 bg-white py-12 shadow-none md:my-8 md:py-14 lg:py-16">
+              <Card className="relative my-0 w-full overflow-hidden rounded-none border-0 bg-lime-100 pb-0 pt-12 shadow-none md:my-0 md:pb-0 md:pt-14 lg:pb-0 lg:pt-14">
                 <svg
                   className="pointer-events-none absolute left-0 top-0 h-10 w-full fill-[hsl(var(--background))]"
                   viewBox="0 0 1440 80"
@@ -228,6 +199,29 @@ export default function Dashboard() {
                 >
                   <path d="M0,64 C240,96 480,32 720,48 C960,64 1200,128 1440,80 L1440,0 L0,0 Z" />
                 </svg>
+                <CardContent className="px-4 pt-4 text-left md:px-8 lg:px-12">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Carrot className="h-6 w-6 text-orange-500" />
+                    <span className={`text-base font-serif font-bold ${reminderStyle.text}`}>
+                      Daily Produce Safety Reminder:
+                    </span>
+                    <div className={`min-w-0 flex-1 text-base ${reminderStyle.text}`}>
+                      {ongoingPreview.length > 0 ? (
+                        <span className="line-clamp-1">
+                          {ongoingPreview.map((task) => task.title).join(" • ")}
+                        </span>
+                      ) : (
+                        <span className="opacity-80">No ongoing tasks yet.</span>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+          {summary && (
+            <div className="-mx-4 md:-mx-8 lg:-mx-12">
+              <Card className="relative my-0 w-full overflow-hidden rounded-none border-0 bg-white py-12 shadow-none md:my-0 md:py-14 lg:py-16">
                 <svg
                   className="pointer-events-none absolute bottom-0 left-0 h-10 w-full rotate-180 fill-[hsl(var(--background))]"
                   viewBox="0 0 1440 80"
@@ -290,7 +284,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="mt-6 grid gap-6 lg:grid-cols-2">
             <StatusCard status={status} />
             <QuickActionCard
               title="Produce Safety Toolkit"
