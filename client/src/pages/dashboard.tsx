@@ -12,20 +12,20 @@ import { format } from "date-fns";
 
 function HeroSection({ hasStatus }: { hasStatus: boolean }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl gradient-hero text-white p-8 md:p-12 shadow-xl">
+    <div className="relative overflow-hidden rounded-2xl bg-transparent text-[#0a4d4f] p-0 md:p-0">
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')] opacity-30"></div>
       <div className="relative z-10">
         <div className="flex items-center gap-2 mb-4">
-          <Sparkles className="h-5 w-5 text-yellow-300" />
-          <span className="text-sm font-medium text-white/90 uppercase tracking-wide">Produce Safety Recordkeeping</span>
+          <Sparkles className="h-5 w-5 text-emerald-500" />
+          <span className="text-sm font-medium text-[#0a4d4f]/80 uppercase tracking-wide">Produce Safety Tasks</span>
         </div>
-        <h1 className="text-3xl md:text-4xl text-white font-serif font-bold mb-3">
-          {hasStatus ? "Welcome back" : "Grow Safely, Sell Confidently"}
+        <h1 className="text-3xl md:text-4xl text-[#0a4d4f] font-serif font-bold mb-3">
+          {hasStatus ? "Welcome back!" : "Grow Safely, Sell Confidently"}
         </h1>
-        <p className="text-lg text-white/80 max-w-2xl mb-6">
+        <p className="text-lg text-[#0a4d4f]/80 max-w-2xl mb-0">
           {hasStatus 
-            ? "Organize your farm's produce safety records and stay on top of FSMA Produce Safety Rule and GAPs requirements."
-            : "Simplify FSMA compliance with smart record-keeping and exemption tracking designed for real farmers."}
+            ? "Reduce produce safety risks on the farm one step at a time."
+            : "Stay organized and on track with your produce safety tasks."}
         </p>
         {!hasStatus && (
           <Link href="/onboarding">
@@ -61,7 +61,7 @@ function QuickActionCard({
 }) {
   return (
     <Link href={href}>
-      <Card className={`${gradient} ${isDark ? 'text-white' : 'text-stone-600'} border border-transparent shadow-sm hover:shadow-lg hover:border-emerald-600 transition-all hover:scale-[1.02] cursor-pointer h-full`}>
+      <Card className={`${gradient} ${isDark ? 'text-white' : 'text-stone-600'} hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer h-full`}>
         <CardHeader className="pb-2">
           <div className="flex items-center gap-3">
             <div className={`p-2 ${iconBg} rounded-lg white`}>
@@ -226,7 +226,7 @@ export default function Dashboard() {
 function StatusCard({ status }: { status: any }) {
   if (!status) {
     return (
-      <Card className="border-2 border-dashed border-orange-300 bg-orange-50/50 dark:bg-orange-950/20">
+      <Card className="border border-dashed border-orange-200 bg-orange-50/70 dark:bg-orange-950/20">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between gap-2">
             <CardTitle className="text-lg font-bold text-orange-800 dark:text-orange-200">FSMA Coverage Status</CardTitle>
@@ -250,12 +250,12 @@ function StatusCard({ status }: { status: any }) {
 
   const getStatusStyle = () => {
     if (status.isExempt && status.exemptionType === "qualified") {
-      return { bg: "bg-amber-50 dark:bg-amber-950/30", border: "border-amber-300", text: "text-amber-800 dark:text-amber-200" };
+      return { bg: "bg-[#f5fbd4] dark:bg-amber-950/30", border: "border-amber-200", text: "text-amber-800 dark:text-amber-200" };
     }
     if (status.isExempt) {
-      return { bg: "bg-emerald-50 dark:bg-emerald-950/30", border: "border-emerald-300", text: "text-emerald-800 dark:text-emerald-200" };
+      return { bg: "bg-[#f5fbd4] dark:bg-emerald-950/30", border: "border-[#d5dbb9]", text: "text-emerald-800 dark:text-emerald-200" };
     }
-    return { bg: "bg-sky-50 dark:bg-sky-950/30", border: "border-sky-300", text: "text-sky-800 dark:text-sky-200" };
+    return { bg: "bg-sky-50/70 dark:bg-sky-950/30", border: "border-sky-200", text: "text-sky-800 dark:text-sky-200" };
   };
 
   const style = getStatusStyle();
@@ -264,7 +264,7 @@ function StatusCard({ status }: { status: any }) {
     : "Covered";
 
   return (
-    <Card className={`border-2 ${style.border} ${style.bg}`}>
+    <Card className={`border ${style.border} ${style.bg}`}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between gap-2">
           <CardTitle className={`text-lg font-bold ${style.text}`}>FSMA Status</CardTitle>

@@ -118,7 +118,15 @@
     @apply bg-gradient-to-br from-accent via-accent/80 to-primary;
   }
   .gradient-hero {
-    @apply bg-gradient-to-br from-primary via-secondary to-accent;
+    /* Darker warm gradient with green and soft light center */
+    background-image:
+      
+      linear-gradient(150deg,
+        rgba(10, 63, 29, .99) 0%,
+        rgba(18, 128, 90, 0.98) 30%,
+        rgba(44, 158, 113, 0.96) 55%,
+        rgba(132, 192, 124, 0.9) 82%,
+        rgba(232, 208, 160, 0.5) 100%);
   }
 }
 
