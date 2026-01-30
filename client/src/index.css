@@ -5,88 +5,88 @@
 @tailwind utilities;
 
 :root {
-  /* Typography reverted to pre-Figma system */
+  /* Claude-inspired warm, paper-like system with bespoke brand colors */
   --font-sans: 'Source Sans 3', sans-serif;
   --font-serif: 'Source Serif 4', serif;
 
-  /* Colorful farm-inspired palette */
-  --primary: 145 44% 33%; /* #2f7a4a */
-  --primary-foreground: 0 0% 100%;
+  /* Brand Palette */
+  --primary: 42 90% 55%; /* #f3b523 */
+  --primary-foreground: 25 30% 12%;
 
-  --secondary: 42 90% 55%; /* #f3b523 */
-  --secondary-foreground: 30 40% 16%;
+  --secondary: 208 48% 60%; /* #689cca */
+  --secondary-foreground: 0 0% 100%;
 
-  --accent: 204 68% 63%; /* #5fa8e5 */
-  --accent-foreground: 0 0% 100%;
+  --accent: 53 86% 73%; /* #f5e77e */
+  --accent-foreground: 25 22% 16%;
 
   --muted: 93 36% 95%; /* #f2f7ee */
-  --muted-foreground: 30 12% 35%;
+  --muted-foreground: 30 10% 35%;
 
   /* Text Colors */
-  --foreground: 30 25% 18%;
+  --foreground: 25 22% 14%;
 
   /* Backgrounds */
-  --background: 36 60% 97%; /* #fff9ef */
+  --background: 93 36% 95%; /* #f2f7ee */
   --card: 0 0% 100%;
-  --card-foreground: 30 25% 18%;
+  --card-foreground: 25 22% 14%;
 
   /* UI Elements */
   --border: 0 0% 90%;
   --input: 0 0% 90%;
-  --ring: 145 44% 33%;
-  --radius: 0.6rem;
+  --ring: 42 90% 55%;
+  --radius: 0.65rem;
 
   /* Sidebar */
-  --sidebar: 142 35% 90%;
-  --sidebar-foreground: 145 30% 20%;
-  --sidebar-border: 140 24% 82%;
-  --sidebar-ring: 204 68% 63%;
-  --sidebar-primary: 145 44% 33%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 42 90% 92%;
-  --sidebar-accent-foreground: 145 30% 20%;
+  --sidebar: 66 58% 78%;
+  --sidebar-foreground: 25 22% 16%;
+  --sidebar-border: 66 58% 72%;
+  --sidebar-ring: 208 48% 60%;
+  --sidebar-primary: 42 90% 55%;
+  --sidebar-primary-foreground: 25 30% 12%;
+  --sidebar-accent: 53 86% 73%;
+  --sidebar-accent-foreground: 25 22% 16%;
 
   /* Status Colors */
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
   --warning: 42 90% 55%;
-  --success: 145 44% 33%;
+  --success: 61 40% 48%;
 
   /* Chart Palette */
-  --chart-1: 145 44% 33%;
-  --chart-2: 42 90% 55%;
-  --chart-3: 204 68% 63%;
+  --chart-1: 42 90% 55%;
+  --chart-2: 208 48% 60%;
+  --chart-3: 53 86% 73%;
   --chart-4: 66 58% 78%;
-  --chart-5: 18 72% 52%;
+  --chart-5: 148 30% 52%;
 
   --popover: 0 0% 100%;
   --popover-foreground: 25 30% 15%;
 }
 
 .dark {
-  --background: 150 20% 12%;
-  --foreground: 60 20% 94%;
-  --card: 150 18% 16%;
-  --card-foreground: 60 20% 94%;
+  --background: 25 18% 10%;
+  --foreground: 60 20% 92%;
+  --card: 25 18% 14%;
+  --card-foreground: 60 20% 92%;
   --border: 0 0% 90%;
   --input: 0 0% 90%;
-  --muted: 150 16% 18%;
-  --muted-foreground: 60 15% 70%;
-  --primary: 145 44% 45%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 42 90% 55%;
-  --secondary-foreground: 30 40% 16%;
-  --accent: 204 68% 63%;
-  --accent-foreground: 0 0% 100%;
+  --muted: 25 16% 18%;
+  --muted-foreground: 60 15% 65%;
+  --primary: 42 90% 55%;
+  --primary-foreground: 25 30% 12%;
+  --secondary: 208 48% 60%;
+  --secondary-foreground: 0 0% 100%;
+  --accent: 53 86% 73%;
+  --accent-foreground: 25 22% 16%;
 
-  --sidebar: 150 16% 14%;
-  --sidebar-foreground: 60 20% 94%;
-  --sidebar-border: 150 12% 22%;
-  --sidebar-ring: 204 68% 63%;
-  --sidebar-primary: 145 44% 45%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 150 12% 20%;
-  --sidebar-accent-foreground: 60 20% 94%;
+  --sidebar: 25 18% 16%;
+  --sidebar-foreground: 60 20% 92%;
+  --sidebar-border: 0 0% 90%;
+  --sidebar-ring: 208 48% 60%;
+  --sidebar-primary: 42 90% 55%;
+  --sidebar-primary-foreground: 25 30% 12%;
+  --sidebar-accent: 25 16% 22%;
+  --sidebar-accent-foreground: 60 20% 92%;
 }
 
 @layer base {
@@ -109,13 +109,13 @@
     @apply bg-white/80 dark:bg-black/50 backdrop-blur-md border border-white/20 shadow-xl;
   }
   .gradient-primary {
-    @apply bg-gradient-to-br from-primary via-emerald-500 to-lime-400;
+    @apply bg-gradient-to-br from-primary via-primary/80 to-accent;
   }
   .gradient-secondary {
-    @apply bg-gradient-to-br from-secondary via-amber-400 to-orange-400;
+    @apply bg-gradient-to-br from-secondary via-secondary/80 to-accent;
   }
   .gradient-accent {
-    @apply bg-gradient-to-br from-accent via-sky-400 to-primary;
+    @apply bg-gradient-to-br from-accent via-accent/80 to-primary;
   }
   .gradient-hero {
     @apply bg-gradient-to-br from-primary via-secondary to-accent;
